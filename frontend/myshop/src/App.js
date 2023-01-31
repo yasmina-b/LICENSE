@@ -1,7 +1,15 @@
-import "./App.css";
+import React from "react";
+import Footer from "./components/Footer";
+import Navbar from "./components/Navbar";
+import "./index.css";
 
 function App() {
-  return <div>Hello</div>;
+  return (
+    <React.Fragment>
+      <Navbar />
+      <Footer />
+    </React.Fragment>
+  );
 }
 
 export default App;
