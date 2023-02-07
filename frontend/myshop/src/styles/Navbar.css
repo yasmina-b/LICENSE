@@ -10,6 +10,7 @@
 .menu-bar {
   display: flex;
   margin-left: 20px;
+  cursor: pointer;
 }
 
 .logo {
@@ -48,6 +49,46 @@
 .shopping-bag-style {
   padding: 10px;
   font-size: 18px;
+}
+
+.sidebar {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 400px;
+  height: 100%;
+  background-color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  z-index: 11;
+}
+
+.sidebar-categories {
+  border: 0;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-categories-list {
+  display: inline-block;
+  text-decoration: underline;
+  margin-left: 20px;
+  margin-top: 30px;
+  letter-spacing: 3px;
+  font-weight: 600;
+}
+
+.sidebar-categories-items-container {
+  margin-top: 50px;
+}
+
+.sidebar-categories-items {
+  text-align: left;
+  margin-top: 20px;
+  letter-spacing: 1px;
 }
 
 @media screen and (max-width: 767px) {
