@@ -1,0 +1,22 @@
+.empty-cart-title {
+  text-align: center;
+  margin-top: 200px;
+  font-size: 35px;
+}
+
+.empty-cart-button-position {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 80px;
+  margin-bottom: 200px;
+}
+
+.empty-cart-button {
+  border: 2px solid black;
+  border: 1px solid #d2d2d2;
+  background-color: white;
+  padding: 15px;
+  font-weight: 700;
+  width: 300px;
+}
