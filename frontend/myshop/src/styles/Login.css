@@ -1,0 +1,96 @@
+.login-title {
+  text-align: center;
+  margin-top: 50px;
+  letter-spacing: 5px;
+  font-size: 30px;
+}
+
+.login-subtitle {
+  color: #666;
+  text-align: center;
+  letter-spacing: 2px;
+  font-family: "Neue-Helvetica", "Helvetica", "Arial", "sans-serif";
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.button-position {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 70px;
+}
+
+.button-position-redirect {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.login-button {
+  background-color: #313131;
+  color: white;
+  border-color: #313131;
+  width: 350px;
+  padding: 10px;
+  font-family: "Neue-Helvetica", "Helvetica", "Arial", "sans-serif";
+}
+
+.register-redirect-title {
+  text-align: center;
+  margin-top: 100px;
+  font-size: 30px;
+  margin-top: 50px;
+}
+
+.register-redirect-subtitle {
+  color: #666;
+  text-align: center;
+  letter-spacing: 2px;
+  font-family: "Neue-Helvetica", "Helvetica", "Arial", "sans-serif";
+}
+
+.register-redirect-button {
+  background-color: white;
+  color: #313131;
+  border: 1px solid black;
+  width: 350px;
+  padding: 10px;
+  font-family: "Neue-Helvetica", "Helvetica", "Arial", "sans-serif";
+}
+
+@media only screen and (max-width: 767px) {
+  .login-title {
+    font-size: 20px;
+  }
+
+  .login-subtitle {
+    font-size: 10px;
+  }
+
+  .login-container {
+    flex-direction: column;
+  }
+
+  .login-button {
+    width: 250px;
+  }
+
+  .register-redirect-title {
+    font-size: 20px;
+  }
+
+  .register-redirect-subtitle {
+    font-size: 10px;
+  }
+
+  .register-redirect-button {
+    width: 250px;
+  }
+}
