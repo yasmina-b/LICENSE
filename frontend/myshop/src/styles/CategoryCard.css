@@ -1,0 +1,41 @@
+.category-card {
+  display: flex;
+  gap: 20px;
+  height: 80vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.shop-by-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-left: 100px;
+}
+
+.shop-by-title h1 {
+  letter-spacing: 2px;
+  font-weight: 600;
+}
+
+.categories {
+  width: 500px;
+  height: 600px;
+  margin: 10px;
+  position: relative;
+}
+.category-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.categories h3 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 100;
+  font-size: 30px;
+  color: white;
+  transform: translate(-50%, -50%);
+}

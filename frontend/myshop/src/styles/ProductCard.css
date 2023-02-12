@@ -1,0 +1,28 @@
+.product-card {
+  margin: 100px 100px;
+  margin-top: 1px;
+}
+
+.product-card-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 50px;
+  margin-top: 30px;
+}
+
+.product-card-title h1 {
+  flex: 2;
+  letter-spacing: 2px;
+  font-weight: 600;
+}
+
+.product-card-title p {
+  flex: 3;
+  color: gray;
+}
+
+.product-card-container {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+}

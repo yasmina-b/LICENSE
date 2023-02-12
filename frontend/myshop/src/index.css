@@ -1,12 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Forum&display=swap");
 body {
   margin: 0;
-  font-family: "Forum", cursive;
+  /* font-family: "Forum", cursive; */
+  font-family: "Neue-Helvetica", "Helvetica", "Arial", "sans-serif";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   flex-grow: 1;
 }
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
