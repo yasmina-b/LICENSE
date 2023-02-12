@@ -1,0 +1,46 @@
+.card {
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 50px;
+}
+
+.card-image {
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-image:hover .second-image {
+  z-index: 4;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+}
+
+.card-image .first-image {
+  z-index: 1;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #313131;
+}
+
+.prices {
+  display: flex;
+}
+
+.prices h3 {
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 3px;
+}

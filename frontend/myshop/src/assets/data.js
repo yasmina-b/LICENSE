@@ -18,3 +18,34 @@ export const carouselItems = [
     desc: "CLASSIC WITH A TOUCH OF ATYPICAL",
   },
 ];
+
+export const productsItems = [
+  {
+    id: 1,
+    img: "https://images.lvrcdn.com/BigRetina76I/5CK/130_5f111015-a5ef-42b9-a4dd-7f08c8c3b051.JPG",
+    img2: "https://images.lvrcdn.com/BigRetina76I/5CK/130_e327d582-2455-43c1-8dd8-e65fce9cd633.JPG",
+    title: "Grand Chiquito leather handle bag",
+    price: 1000,
+  },
+  {
+    id: 2,
+    img: "https://images.lvrcdn.com/BigRetina76I/5CK/130_5f111015-a5ef-42b9-a4dd-7f08c8c3b051.JPG",
+    img2: "https://images.lvrcdn.com/BigRetina76I/5CK/130_e327d582-2455-43c1-8dd8-e65fce9cd633.JPG",
+    title: "Grand Chiquito leather handle bag",
+    price: 1000,
+  },
+  {
+    id: 3,
+    img: "https://images.lvrcdn.com/BigRetina76I/5CK/130_5f111015-a5ef-42b9-a4dd-7f08c8c3b051.JPG",
+    img2: "https://images.lvrcdn.com/BigRetina76I/5CK/130_e327d582-2455-43c1-8dd8-e65fce9cd633.JPG",
+    title: "Grand Chiquito leather handle bag",
+    price: 1000,
+  },
+  {
+    id: 4,
+    img: "https://images.lvrcdn.com/BigRetina76I/5CK/130_5f111015-a5ef-42b9-a4dd-7f08c8c3b051.JPG",
+    img2: "https://images.lvrcdn.com/BigRetina76I/5CK/130_e327d582-2455-43c1-8dd8-e65fce9cd633.JPG",
+    title: "Grand Chiquito leather handle bag",
+    price: 1000,
+  },
+];

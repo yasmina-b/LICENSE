@@ -9,7 +9,6 @@
   color: #666;
   text-align: center;
   letter-spacing: 2px;
-  font-family: "Neue-Helvetica", "Helvetica", "Arial", "sans-serif";
 }
 
 .login-container {
@@ -39,7 +38,6 @@
   border-color: #313131;
   width: 350px;
   padding: 10px;
-  font-family: "Neue-Helvetica", "Helvetica", "Arial", "sans-serif";
 }
 
 .register-redirect-title {
@@ -53,7 +51,6 @@
   color: #666;
   text-align: center;
   letter-spacing: 2px;
-  font-family: "Neue-Helvetica", "Helvetica", "Arial", "sans-serif";
 }
 
 .register-redirect-button {
@@ -62,7 +59,6 @@
   border: 1px solid black;
   width: 350px;
   padding: 10px;
-  font-family: "Neue-Helvetica", "Helvetica", "Arial", "sans-serif";
 }
 
 @media only screen and (max-width: 767px) {

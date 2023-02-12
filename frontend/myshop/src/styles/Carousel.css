@@ -67,16 +67,18 @@
 }
 
 .carousel-slide-title {
-  font-size: 40px;
+  font-size: 30px;
   text-align: center;
   margin-top: 10px;
+  letter-spacing: 2px;
+  font-weight: 600;
 }
 
 .carousel-slide-description {
   margin: 50px 0px;
   font-size: 20px;
-  font-weight: 500;
-  letter-spacing: 3px;
+  font-weight: 300;
+  letter-spacing: 5px;
   text-align: center;
 }
 
@@ -87,7 +89,7 @@
   cursor: pointer;
   border: transparent;
   justify-content: center;
-  letter-spacing: 7px;
+  letter-spacing: 10px;
 }
 
 @media (max-width: 767px) {

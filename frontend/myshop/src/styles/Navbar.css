@@ -20,6 +20,7 @@
   font-weight: 800;
   display: flex;
   align-items: center;
+  font-family: "Forum", cursive;
 }
 
 .logo:hover {
@@ -42,7 +43,7 @@
 .navbar-item-style {
   text-decoration: none;
   color: black;
-  font-weight: 600;
+  font-weight: 400;
   letter-spacing: 1px;
 }
 
