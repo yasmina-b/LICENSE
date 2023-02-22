@@ -14,7 +14,7 @@
 }
 
 .card-image:hover .second-image {
-  z-index: 4;
+  z-index: 2;
 }
 
 .card-image img {
@@ -28,6 +28,14 @@
   z-index: 1;
 }
 
+.card-subcategory {
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #313131;
+  margin-bottom: -10px !important;
+}
+
 .card-title {
   font-size: 15px;
   font-weight: 400;
@@ -37,10 +45,11 @@
 
 .prices {
   display: flex;
+  margin-top: -10px !important;
 }
 
 .prices h3 {
   font-size: 15px;
-  font-weight: 500;
-  margin-top: 3px;
+  font-weight: 600;
+  margin-top: 0px;
 }

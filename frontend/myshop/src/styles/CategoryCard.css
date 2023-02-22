@@ -1,9 +1,11 @@
 .category-card {
   display: flex;
-  gap: 20px;
+  gap: 5px;
   height: 80vh;
   justify-content: center;
   align-items: center;
+  margin-bottom: -10px;
+  margin-top: -80px;
 }
 
 .shop-by-title {
@@ -11,16 +13,19 @@
   align-items: center;
   margin-bottom: 20px;
   margin-left: 100px;
+  text-align: center;
+  justify-content: center;
 }
 
 .shop-by-title h1 {
-  letter-spacing: 2px;
+  letter-spacing: 6px;
   font-weight: 600;
+  margin-right: 50px;
 }
 
 .categories {
-  width: 500px;
-  height: 600px;
+  width: 650px;
+  height: 450px;
   margin: 10px;
   position: relative;
 }
@@ -38,4 +43,5 @@
   font-size: 30px;
   color: white;
   transform: translate(-50%, -50%);
+  letter-spacing: 10px;
 }

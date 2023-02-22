@@ -8,12 +8,14 @@
   align-items: center;
   margin-bottom: 50px;
   margin-top: 30px;
+  justify-content: center;
 }
 
 .product-card-title h1 {
   flex: 2;
-  letter-spacing: 2px;
+  letter-spacing: 6px;
   font-weight: 600;
+  text-align: center;
 }
 
 .product-card-title p {
@@ -25,4 +27,20 @@
   display: flex;
   justify-content: center;
   gap: 50px;
+  position: relative;
+}
+
+.product-tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #fdd835;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 4px;
+  z-index: 1;
+  transform: translate(-50%, -50%);
 }
