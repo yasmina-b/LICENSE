@@ -1,0 +1,30 @@
+.subcategorybar {
+  background-color: white;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
+}
+
+.subcategorybar-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  height: 100%;
+  gap: 20px;
+}
+
+.subcategorybar-items {
+  font-size: 15px;
+  margin: 0 10px;
+  font-weight: 700;
+  /* letter-spacing: 1px; */
+}
+
+.input-style-nav {
+  margin-left: 300px;
+  width: 400px;
+  height: 20px;
+}

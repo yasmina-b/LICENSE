@@ -2,7 +2,9 @@
 body {
   margin: 0;
   /* font-family: "Forum", cursive; */
-  font-family: "Neue-Helvetica", "Helvetica", "Arial", "sans-serif";
+  /* font-family: "Neue-Helvetica", "Helvetica", "Arial", "sans-serif"; */
+  font-family: Futura-Medium, Century Gothic, Gill Sans, Helvetica, Arial,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   flex-grow: 1;

@@ -1,0 +1,14 @@
+.promo {
+  background-color: #d8d1d1;
+  display: flex;
+  height: 30px;
+  justify-content: center;
+  align-items: center;
+}
+
+.promo-info {
+  text-align: center;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 4px;
+}

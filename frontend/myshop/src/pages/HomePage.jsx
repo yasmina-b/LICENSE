@@ -1,14 +1,22 @@
 import React from "react";
 import Carousel from "../components/Carousel";
 import CategoryCard from "../components/CategoryCard";
+import MSubcategoryCarousel from "../components/MSubcategoryCarousel";
+import Newsletter from "../components/Newsletter";
 import ProductCard from "../components/ProductCard";
+import ShopPromo from "../components/ShopPromo";
+import WSubcategoryCarousel from "../components/WSubcategoryCarousel";
 
 const HomePage = () => {
   return (
     <React.Fragment>
       <Carousel />
+      <ShopPromo />
+      <WSubcategoryCarousel />
       <CategoryCard />
+      <MSubcategoryCarousel />
       <ProductCard />
+      <Newsletter />
     </React.Fragment>
   );
 };

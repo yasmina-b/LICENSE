@@ -23,9 +23,9 @@
   font-family: "Forum", cursive;
 }
 
-.logo:hover {
+/* .logo:hover {
   color: #019d3a;
-}
+} */
 
 .navbar-items {
   margin-left: auto;
@@ -38,6 +38,7 @@
   font-size: 15px;
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .navbar-item-style {
@@ -45,11 +46,58 @@
   color: black;
   font-weight: 400;
   letter-spacing: 1px;
+  margin-right: 20px;
+}
+
+.input-with-icons {
+  height: 25px;
+  width: 250px;
+  margin-right: 30px;
+  position: relative;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+.input-with-icons input[type="text"] {
+  width: 100%;
+}
+
+.icon-search {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  height: 18px;
+}
+
+.icon-camera {
+  position: absolute;
+  right: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 18px;
 }
 
 .shopping-bag-style {
   padding: 10px;
   font-size: 18px;
+  position: relative;
+}
+
+.shopping-bag-item {
+  font-size: 12px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #b4a5a5;
+  color: black;
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sidebar {

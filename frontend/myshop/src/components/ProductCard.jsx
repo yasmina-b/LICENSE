@@ -10,9 +10,14 @@ const ProductCard = () => {
         <div className="product-card-title">
           <h1>GREET SS23 WITH THE SEASON'S NEWEST ARRIVALS</h1>
         </div>
+        <div className="subcategory-subtitle">
+        <h1>Don't miss the ESSENTIALS EDIT</h1>
+      </div>
         <div className="product-card-container">
           {productsItems.map((item) => (
-            <Card item={item} key={item.id} />
+            <React.Fragment>
+              <Card item={item} key={item.id} />
+            </React.Fragment>
           ))}
         </div>
       </div>

@@ -26,14 +26,14 @@
 .footer-column-title-logo {
   color: #2e2e2e;
   margin-bottom: 30px;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 20px;
   position: relative;
   letter-spacing: 3px;
 }
 
 .footer-column-title-description {
-  color: #019d3a;
+  color: black;
   margin-bottom: 20px;
   font-size: 12px;
   position: relative;

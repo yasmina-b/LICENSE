@@ -90,6 +90,7 @@
   border: transparent;
   justify-content: center;
   letter-spacing: 10px;
+  font-weight: 600;
 }
 
 @media (max-width: 767px) {

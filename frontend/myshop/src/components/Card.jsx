@@ -9,9 +9,10 @@ const Card = ({ item }) => {
           <img src={item.img} alt="" className="first-image" />
           <img src={item.img2} alt="" className="second-image" />
         </div>
+        <h2 className="card-subcategory">BAG</h2>
         <h2 className="card-title">{item.title}</h2>
         <div className="prices">
-          <h3>${item.price}</h3>
+          <h3>RON {item.price}.00</h3>
         </div>
       </div>
     </React.Fragment>
