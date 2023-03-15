@@ -22,7 +22,7 @@ const Carousel = () => {
           className="wrapper"
           style={{ transform: `translateX(-${currentSlide * 100}vw)` }}
         >
-          {carouselItems.map((slide, index ) => (
+          {carouselItems.map((slide, index) => (
             <div className="slide" key={index}>
               <div className="image-container">
                 <img className="carousel-image" src={slide.img} alt=""></img>
@@ -30,7 +30,9 @@ const Carousel = () => {
               <div className="carousel-info">
                 <div className="carousel-slide-title">{slide.title}</div>
                 <div className="carousel-slide-description">{slide.desc}</div>
-                <button className="carousel-button">DISCOVER</button>
+                <a href="/products">
+                  <button className="carousel-button">DISCOVER</button>
+                </a>
               </div>
             </div>
           ))}

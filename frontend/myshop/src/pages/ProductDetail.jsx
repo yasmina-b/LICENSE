@@ -6,8 +6,8 @@ const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
 
   const images = [
-    "https://images.lvrcdn.com/BigRetina76I/5CK/130_5f111015-a5ef-42b9-a4dd-7f08c8c3b051.JPG",
-    "https://images.lvrcdn.com/BigRetina76I/5CK/130_e327d582-2455-43c1-8dd8-e65fce9cd633.JPG",
+    "https://images.lvrcdn.com/BigRetina77I/Z1D/006_8a57e8b6-68a9-4a93-94e4-08d7e95a765b.JPG",
+    "https://images.lvrcdn.com/BigRetina77I/Z1D/006_3cec98fd-2083-4972-b66b-a8af691c9b4d.JPG",
   ];
 
   const handleImageClick = (index) => {
