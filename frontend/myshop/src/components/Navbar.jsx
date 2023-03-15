@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../styles/Navbar.css";
-import { Menu, ShoppingBag, User, Camera, Search, Heart} from "react-feather";
+import { Menu, ShoppingBag, User, Camera, Search, Heart } from "react-feather";
 
 const Navbar = () => {
   const [isOpen, setOpen] = useState(false);
@@ -12,21 +12,29 @@ const Navbar = () => {
           <div className="logo">MINIMALIST STUDIO</div>
         </a>
         <div className="navbar-items">
-          <li className="navbar-item">
-            <input className="input-with-icons" placeholder="Search for..." type="text"/>
+          <div className="navbar-item">
+            <input
+              className="input-with-icons"
+              placeholder="Search for..."
+              type="text"
+            />
             <Search className="icon-search"></Search>
             <Camera className="icon-camera"></Camera>
-          </li>
+          </div>
           <li className="navbar-item">
             <a className="navbar-item-style" href="/login">
               LOG IN
             </a>
-            <li className="navbar-item">
-              <Heart></Heart>
-            </li>
           </li>
           <li className="navbar-item">
-            <User></User>
+            <a href="/wishlist">
+              <Heart></Heart>
+            </a>
+          </li>
+          <li className="navbar-item">
+            <a href="/account">
+              <User></User>
+            </a>
           </li>
           <li className="navbar-item">
             <a href="/cart">

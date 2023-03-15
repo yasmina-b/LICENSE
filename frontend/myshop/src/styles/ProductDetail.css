@@ -8,6 +8,7 @@
 .left-container {
   display: flex;
   gap: 30px;
+  margin-top: -50px;
 }
 
 .images {
@@ -40,6 +41,10 @@
   margin-left: 100px;
 }
 
+.right-container h1{
+  font-weight: 600;
+}
+
 .product-description {
   color: #313131;
   font-size: 15px;
@@ -49,7 +54,7 @@
 .product-price {
   font-size: 25px;
   color: #313131;
-  font-weight: 700;
+  font-weight: 600;
   margin-top: 50px;
 }
 

@@ -1,0 +1,36 @@
+.products-page {
+  padding: 30px 50px;
+  display: flex;
+}
+
+.category-name-products {
+  text-align: center;
+  margin-top: 50px;
+  color: #313131;
+  font-weight: 500;
+}
+
+.category-description-products {
+  text-align: center;
+  padding-left: 50px;
+  padding-right: 50px;
+  color: #666;
+  font-weight: 500;
+  font-size: 14px;
+  margin-top: -10px;
+}
+
+.left-part {
+  flex: 1;
+}
+
+.right-part {
+  flex: 3;
+}
+
+.products-list {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-left: 2px;
+}
