@@ -8,7 +8,7 @@ import "./index.css";
 function App() {
   return (
     <React.Fragment>
-      <Promo/>
+      <Promo />
       <Navbar />
       <AppRoutes />
       <Footer />
