@@ -15,8 +15,8 @@ const ProductCard = () => {
       </div>
         <div className="product-card-container">
           {productsItems.map((item) => (
-            <React.Fragment>
-              <Card item={item} key={item.id} />
+            <React.Fragment key={item.id}>
+              <Card item={item} />
             </React.Fragment>
           ))}
         </div>

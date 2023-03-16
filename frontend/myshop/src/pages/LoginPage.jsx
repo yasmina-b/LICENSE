@@ -1,10 +1,33 @@
-import React from "react";
+import React, { useState, useContext } from "react";
+import axios from "axios";
 import "../styles/Login.css";
 import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+   const { setUser } = useContext(AuthContext);
+
+  const handleUserLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:3001/auth/login", {
+        email,
+        password,
+      });
+      if (res.status === 200) {
+        console.log("User logged in succesfully!");
+        console.log(res.data);
+        setUser(res.data);
+        navigate("/");
+      }
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
 
   const registerHandler = () => {
     navigate("/register");
@@ -21,6 +44,9 @@ const LoginPage = () => {
           id="standard-basic"
           label="Email"
           variant="standard"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
       </div>
       <div className="login-container">
@@ -29,10 +55,15 @@ const LoginPage = () => {
           id="standard-basic"
           label="Password"
           variant="standard"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
       </div>
       <div className="button-position">
-        <button className="login-button">SIGN IN</button>
+        <button className="login-button" onClick={(e) => handleUserLogin(e)}>
+          SIGN IN
+        </button>
       </div>
       <h2 className="register-redirect-title"> New to MINIMALIST STUDIO?</h2>
       <h5 className="register-redirect-subtitle">
@@ -46,5 +77,4 @@ const LoginPage = () => {
     </React.Fragment>
   );
 };
-
 export default LoginPage;

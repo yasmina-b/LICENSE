@@ -34,6 +34,11 @@
   padding: 10px;
 }
 
+.error-message {
+  font-size: 11px;
+  color: #f45b69;
+}
+
 @media only screen and (max-width: 767px) {
   .register-title {
     font-size: 20px;

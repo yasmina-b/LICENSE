@@ -13,7 +13,7 @@ const CategoryCard = () => {
       <div className="category-card">
         <div className="categories">
           <img
-            class="category-image"
+            className="category-image"
             src="https://www.fashiongonerogue.com/wp-content/uploads/2021/03/Massimo-Dutti-Limited-Edition-Spring-Summer-2021-Campaign02.jpg"
             alt=""
           />
