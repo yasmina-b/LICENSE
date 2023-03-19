@@ -6,7 +6,6 @@ export type AuthenticatedRequest = Request & {
     id: string;
     email: string;
     isAdmin: boolean;
-    iat: number;
   };
 };
 

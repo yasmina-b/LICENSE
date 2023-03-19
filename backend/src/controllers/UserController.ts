@@ -1,8 +1,8 @@
 import express = require("express");
 const router = express.Router();
-import { getUser } from "../services/UserService";
-import { verifyToken } from "../middleware/verifyToken";
+import { getAllUsers, updateUserDetails } from "../services/UserService";
 
-router.get("/user", verifyToken, getUser); // get user
+router.get("/admin/users/", getAllUsers);
+router.put("/user/:userId", updateUserDetails);
 
 module.exports = router;
