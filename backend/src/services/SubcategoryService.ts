@@ -19,6 +19,99 @@ export const getAllSubcategories = async (req: Request, res: Response) => {
   }
 };
 
+export const getSubcategoryBySubcategoryId = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const subcategoryId = req.params.subcategoryId;
+
+    const subcategory = await AppDataSource.getRepository(Subcategory).find({
+      where: { id: subcategoryId },
+    });
+
+    return res.json(subcategory);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+export const getSubcategoriesByCategoryId = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const categoryId = req.params.categoryId;
+
+    const subcategories = await AppDataSource.getRepository(Category).find({
+      where: { id: categoryId },
+      relations: ["subcategories"],
+      order: {
+        name: "ASC",
+      },
+    });
+    const subcategoriesList =
+      subcategories.length > 0 ? subcategories[0].subcategories : [];
+    return res.json(subcategoriesList);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+export const getSubcategoriesOfFirstCategoryId = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const category = await AppDataSource.getRepository(Category).findOne({
+      where: {},
+      order: { id: "ASC" },
+    });
+
+    const subcategories = await AppDataSource.getRepository(Category)
+      .createQueryBuilder("category")
+      .leftJoinAndSelect("category.subcategories", "subcategory")
+      .where("category.id = :id", { id: category.id })
+      .orderBy("subcategory.name", "ASC")
+      .getMany();
+
+    const subcategoriesList =
+      subcategories.length > 0 ? subcategories[0].subcategories : [];
+    return res.json(subcategoriesList);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+export const getSubcategoriesOfLastCategoryId = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const category = await AppDataSource.getRepository(Category).findOne({
+      where: {},
+      order: { id: "DESC" },
+    });
+
+    const subcategories = await AppDataSource.getRepository(Category)
+      .createQueryBuilder("category")
+      .leftJoinAndSelect("category.subcategories", "subcategory")
+      .where("category.id = :id", { id: category.id })
+      .orderBy("subcategory.name", "ASC")
+      .getMany();
+
+    const subcategoriesList =
+      subcategories.length > 0 ? subcategories[0].subcategories : [];
+    return res.json(subcategoriesList);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
 export const createSubcategory = async (
   req: AuthenticatedRequest,
   res: Response
@@ -49,7 +142,7 @@ export const createSubcategory = async (
       name,
       imageURL,
       description,
-      category
+      category,
     });
     const result = await subcategory.save();
 
@@ -94,6 +187,10 @@ export const deleteSubcategory = async (
 
 module.exports = {
   getAllSubcategories,
+  getSubcategoriesByCategoryId,
+  getSubcategoryBySubcategoryId,
+  getSubcategoriesOfFirstCategoryId,
+  getSubcategoriesOfLastCategoryId,
   createSubcategory,
   deleteSubcategory,
 };

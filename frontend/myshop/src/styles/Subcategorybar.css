@@ -4,6 +4,7 @@
   display: flex;
   justify-content: center;
   margin-top: 5px;
+  margin-bottom: 20px;
 }
 
 .subcategorybar-center {
@@ -20,6 +21,8 @@
   font-size: 15px;
   margin: 0 20px;
   font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
   /* letter-spacing: 1px; */
 }
 

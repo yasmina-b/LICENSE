@@ -35,7 +35,7 @@
 .navbar-item {
   list-style: none;
   padding: 10px;
-  font-size: 15px;
+  font-size: 13px;
   display: flex;
   align-items: center;
   position: relative;
@@ -81,7 +81,7 @@
 
 .shopping-bag-style {
   padding: 10px;
-  font-size: 18px;
+  font-size: 12px;
   position: relative;
 }
 

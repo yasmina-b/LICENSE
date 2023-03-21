@@ -35,7 +35,7 @@ const RegisterPage = () => {
   return (
     <React.Fragment>
       <h2 className="register-title">REGISTER NOW</h2>
-      <h5 className="register-subtitle">Become a party of our community.</h5>
+      <h5 className="register-subtitle">Become a part of our community.</h5>
       <div className="register-container">
         <TextField
           sx={{ width: 500 }}

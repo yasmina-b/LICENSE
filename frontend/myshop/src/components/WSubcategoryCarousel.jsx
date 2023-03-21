@@ -1,10 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/SubcategoryCarousel.css";
+import { useNavigate } from "react-router-dom";
 
 const WSubcategoryCarousel = () => {
+  const [subcategoriesList, setSubcategoriesList] = useState([]);
+  const navigate = useNavigate();
+
+  const getSubcategories = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/subcategoriesFirst`
+      );
+      setSubcategoriesList(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getSubcategories();
+  }, []);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -49,71 +69,24 @@ const WSubcategoryCarousel = () => {
       </div>
       <div className="slider-container">
         <Slider {...settings}>
-          <div className="slider-card">
-            <div className="slider-card-container">
-              <div className="slider-image-container">
-                <img
-                  src="https://img.mytheresa.com/420/475/95/jpeg/catalog/product/04/P00623855.jpg"
-                  alt=""
-                ></img>
+          {subcategoriesList &&
+            subcategoriesList.map((subcategory) => (
+              <div className="slider-card">
+                <div className="slider-card-container">
+                  <div
+                    className="slider-image-container"
+                    onClick={() => navigate(`/products/${subcategory.id}`)}
+                  >
+                    <img src={subcategory.imageURL} alt=""></img>
+                  </div>
+                  <div className="slider-bottom">
+                    <div className="slider-bottom-title">
+                      {subcategory.name}
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="slider-bottom">
-                <div className="slider-bottom-title">DRESSES</div>
-              </div>
-            </div>
-          </div>
-          <div className="slider-card">
-            <div className="slider-card-container">
-              <div className="slider-image-container">
-                <img
-                  src="https://img.mytheresa.com/420/475/95/jpeg/catalog/product/9b/P00709633.jpg"
-                  alt=""
-                ></img>
-              </div>
-              <div className="slider-bottom">
-                <div className="slider-bottom-title">DRESSES</div>
-              </div>
-            </div>
-          </div>
-          <div className="slider-card">
-            <div className="slider-card-container">
-              <div className="slider-image-container">
-                <img
-                  src="https://img.mytheresa.com/420/475/95/jpeg/catalog/product/d6/P00440221.jpg"
-                  alt=""
-                ></img>
-              </div>
-              <div className="slider-bottom">
-                <div className="slider-bottom-title">DRESSES</div>
-              </div>
-            </div>
-          </div>
-          <div className="slider-card">
-            <div className="slider-card-container">
-              <div className="slider-image-container">
-                <img
-                  src="https://img.mytheresa.com/420/475/95/jpeg/catalog/product/ef/P00751726.jpg"
-                  alt=""
-                ></img>
-              </div>
-              <div className="slider-bottom">
-                <div className="slider-bottom-title">DRESSES</div>
-              </div>
-            </div>
-          </div>
-          <div className="slider-card">
-            <div className="slider-card-container">
-              <div className="slider-image-container">
-                <img
-                  src="https://img.mytheresa.com/420/475/95/jpeg/catalog/product/cd/P00759258.jpg"
-                  alt=""
-                ></img>
-              </div>
-              <div className="slider-bottom">
-                <div className="slider-bottom-title">DRESSES</div>
-              </div>
-            </div>
-          </div>
+            ))}
         </Slider>
       </div>
     </React.Fragment>

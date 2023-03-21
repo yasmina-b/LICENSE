@@ -44,4 +44,5 @@
   color: white;
   transform: translate(-50%, -50%);
   letter-spacing: 10px;
+  text-transform: uppercase;
 }

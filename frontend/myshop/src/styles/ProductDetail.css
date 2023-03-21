@@ -45,9 +45,13 @@
   font-weight: 600;
 }
 
+.product-name {
+  text-transform: uppercase;
+}
+
 .product-description {
   color: #313131;
-  font-size: 15px;
+  font-size: 20px;
   letter-spacing: 1px;
 }
 
@@ -61,15 +65,21 @@
 .size-select-label {
   margin-top: 25px;
   font-weight: 600;
+  margin-top: 100px;
+}
+
+.select-size-container {
+  display: flex;
+  gap: 20px;
 }
 
 .select-size {
-  margin-top: 15px;
-  width: 150px;
+  margin-top: 20px;
+  width: 50px;
   text-align: center;
   background-color: white;
-  border-radius: 5px;
-  border: 1px solid black;
+  border-radius: 3px;
+  border: 2px solid black;
   height: 25px;
 }
 

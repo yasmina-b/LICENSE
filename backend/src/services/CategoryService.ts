@@ -6,12 +6,27 @@ import Category from "../entities/Category";
 export const getAllCategories = async (req: Request, res: Response) => {
   try {
     const categories = await AppDataSource.getRepository(Category).find({
-      relations: ["subcategories"],
+      relations: ["subcategories", "subcategories.products"],
       order: {
         name: "DESC",
       },
     });
     return res.json(categories);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+export const getCategoryByCategoryId = async (req: Request, res: Response) => {
+  try {
+    const categoryId = req.params.categoryId;
+
+    const category = await AppDataSource.getRepository(Category).find({
+      where: { id: categoryId },
+    });
+
+    return res.json(category);
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
@@ -76,6 +91,7 @@ export const deleteCategory = async (
 
 module.exports = {
   getAllCategories,
+  getCategoryByCategoryId,
   createCategory,
   deleteCategory,
 };
