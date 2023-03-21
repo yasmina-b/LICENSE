@@ -20,6 +20,9 @@ export default class Product extends BaseEntity {
   @Column()
   description: string;
 
+  @Column({nullable: true})
+  price: number;
+
   @Column()
   firstImageURL: string;
 

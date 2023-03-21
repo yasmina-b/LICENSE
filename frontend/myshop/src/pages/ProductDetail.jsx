@@ -1,26 +1,81 @@
-import React, { useState } from "react";
-import Subcategorybar from "../components/Subcategorybar";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import "../styles/ProductDetail.css";
 
 const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
+  const [productVariants, setProductVariants] = useState([]);
+  const [productAttributeValues, setProductAttributeValues] = useState([]);
+  const [product, setProduct] = useState([]);
 
-  const images = [
-    "https://images.lvrcdn.com/BigRetina77I/Z1D/006_8a57e8b6-68a9-4a93-94e4-08d7e95a765b.JPG",
-    "https://images.lvrcdn.com/BigRetina77I/Z1D/006_3cec98fd-2083-4972-b66b-a8af691c9b4d.JPG",
-  ];
+  const { productId } = useParams();
+
+  const getProductVariantsOfProduct = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/productVariants/${productId}`
+      );
+      const variantsWithImages = response.data.map((variant) => {
+        const firstImageURL = variant.product.firstImageURL;
+        const secondImageURL = variant.product.secondImageURL;
+        return {
+          ...variant,
+          images: [firstImageURL, secondImageURL],
+        };
+      });
+      setProductVariants(variantsWithImages);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getProductAttributeValuesOfProduct = async (productId) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:3001/productAttributeValues/${productId}`
+      );
+      setProductAttributeValues(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getProductByProductId = async (productId) => {
+    try {
+      const res = await axios.get(`http://localhost:3001/product/${productId}`);
+      const productWithImages = res.data.map((item) => {
+        const firstImageURL = item.firstImageURL;
+        const secondImageURL = item.secondImageURL;
+        return {
+          ...item,
+          images: [firstImageURL, secondImageURL],
+        };
+      });
+      setProduct(productWithImages);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleImageClick = (index) => {
     setSelectedImage(index);
   };
 
+  console.log(product[selectedImage]?.images);
+
+  useEffect(() => {
+    //getProductVariantsOfProduct(productId);
+    getProductAttributeValuesOfProduct(productId);
+    getProductByProductId(productId);
+  }, [productId]);
+
   return (
     <React.Fragment>
-        <Subcategorybar/>
       <div className="product-details">
         <div className="left-container">
           <div className="images">
-            {images.map((image, index) => (
+            {product[selectedImage]?.images?.map((image, index) => (
               <img
                 src={image}
                 alt=""
@@ -30,29 +85,55 @@ const ProductDetail = () => {
             ))}
           </div>
           <div className="main-image">
-            <img src={images[selectedImage]} alt="" />
+            <img src={product[selectedImage]?.images?.[selectedImage]} alt="" />
           </div>
         </div>
         <div className="right-container">
-          <h1>JAQUEMUS LEATHER BAG</h1>
-          <div className="product-description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </div>
-          <div className="product-price">$100</div>
-          <label className="size-select-label">SELECT YOUR SIZE:</label>
-          <select className="select-size">
-            <option>S</option>
-            <option>M</option>
-            <option>L</option>
-          </select>
-          <div className="find-size-container">
-            <div className="find-size">Find your size</div>
-            <div className="size-guide">Size guide</div>
+          {/* {productVariants &&
+            productVariants.map((productVariant) => (
+              <div key={productVariant.id}>
+                <h1>{productVariant.product.name}</h1>
+                <div className="product-description">
+                  {productVariant.product.description}
+                </div>
+                <div>Quantity: {productVariant.quantity}</div>
+                <div className="product-price">
+                  {" "}
+                  RON {productVariant.product.price}
+                </div>
+                <label className="size-select-label">SIZES AVAILABLE:</label>
+                <ul>
+                  {productVariant.productAttributeValues.map(
+                    (attributeValue) => (
+                      <select className="select-size" key={attributeValue.id}>
+                        <option>{attributeValue.value}</option>
+                      </select>
+                    )
+                  )}
+                </ul>
+              </div>
+            ))} */}
+
+          {product &&
+            product.map((item) => (
+              <div key={item.id}>
+                <h1 className="product-name">{item.name}</h1>
+                <div className="product-description">{item.description}</div>
+                <div className="product-price">RON {item.price}.00</div>
+              </div>
+            ))}
+          <div className="size-select-label">SELECT YOUR SIZE:</div>
+          <div className="select-size-container">
+            {productAttributeValues.map((productAttributeValue) => (
+              <div key={productAttributeValue.id}>
+                <option className="select-size">
+                  {productAttributeValue.value}
+                </option>
+              </div>
+            ))}
           </div>
           <div className="buttons-position">
             <button className="cart-button">ADD TO BAG</button>
-            <button className="wishlist-button">ADD TO WISHLIST</button>
           </div>
         </div>
       </div>

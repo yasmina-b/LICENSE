@@ -10,6 +10,7 @@
   color: #666;
   text-align: center;
   letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .login-container {

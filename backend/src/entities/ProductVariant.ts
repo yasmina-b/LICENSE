@@ -18,16 +18,7 @@ export default class ProductVariant extends BaseEntity {
   quantity: number;
 
   @Column()
-  price: number;
-
-  @Column()
   addedDate: Date;
-
-  @Column()
-  firstImageURL: string;
-
-  @Column()
-  secondImageURL: string;
 
   @ManyToOne(() => Product, (product) => product, {
     eager: true,

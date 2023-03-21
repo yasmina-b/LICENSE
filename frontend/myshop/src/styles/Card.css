@@ -33,6 +33,7 @@
   font-weight: 600;
   text-transform: uppercase;
   color: #313131;
+  text-align: center;
   margin-bottom: -10px !important;
 }
 
@@ -40,7 +41,8 @@
   font-size: 15px;
   font-weight: 400;
   text-transform: uppercase;
-  color: #313131;
+  color: #605e5e;
+  text-align: center;
 }
 
 .prices {
@@ -48,8 +50,9 @@
   margin-top: -10px !important;
 }
 
-.prices h3 {
+.card-price {
   font-size: 15px;
   font-weight: 600;
-  margin-top: 0px;
+  margin-top: -3px;
+  text-align: center;
 }

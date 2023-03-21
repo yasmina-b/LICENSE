@@ -30,6 +30,53 @@ export const getProductVariantsByProductId = async (
   }
 };
 
+export const getProductAttributeValuesByProductVariantId = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const productVariantId = req.params.productVariantId;
+
+    const productAttributeValues = await AppDataSource.getRepository(
+      ProductVariant
+    ).find({
+      where: { id: productVariantId },
+      relations: ["productAttributeValues"],
+    });
+    const productAttributeValuesList =
+      productAttributeValues.length > 0
+        ? productAttributeValues[0].productAttributeValues
+        : [];
+    return res.json(productAttributeValuesList);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+export const getProductVariantByProductVariantId = async (
+  req: Request,
+  res: Response
+) => {
+  const productVariantId = req.params.productVariantId;
+
+  try {
+    const productVariant = await AppDataSource.getRepository(
+      ProductVariant
+    ).find({
+      where: {
+        id: productVariantId,
+      },
+      relations: ["productAttributeValues"],
+    });
+
+    return res.json(productVariant);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
 export const getAllProductVariants = async (req: Request, res: Response) => {
   try {
     const productVariants = await AppDataSource.getRepository(
@@ -46,8 +93,7 @@ export const createProductVariant = async (
   req: AuthenticatedRequest,
   res: Response
 ) => {
-  const { quantity, price, addedDate, firstImageURL, secondImageURL } =
-    req.body;
+  const { quantity, price, addedDate } = req.body;
   const { tkUser } = req;
   const { productId } = req.params;
   const { productAttributeValueId } = req.body;
@@ -89,10 +135,7 @@ export const createProductVariant = async (
 
     const productVariant = AppDataSource.getRepository(ProductVariant).create({
       quantity,
-      price,
       addedDate,
-      firstImageURL,
-      secondImageURL,
       product,
     });
 
@@ -112,5 +155,7 @@ export const createProductVariant = async (
 module.exports = {
   getProductVariantsByProductId,
   getAllProductVariants,
+  getProductVariantByProductVariantId,
+  getProductAttributeValuesByProductVariantId,
   createProductVariant,
 };

@@ -7,7 +7,9 @@
   text-align: center;
   margin-top: 50px;
   color: #313131;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 20px;
+  text-transform: uppercase;
 }
 
 .category-description-products {
@@ -16,7 +18,7 @@
   padding-right: 50px;
   color: #666;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 19px;
   margin-top: -10px;
 }
 
@@ -26,6 +28,8 @@
 
 .right-part {
   flex: 3;
+  margin-left: 40px;
+  margin-right: 40px;
 }
 
 .products-list {

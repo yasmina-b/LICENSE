@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/Carousel.css";
 import { carouselItems } from "../assets/data";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -6,6 +6,14 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev === 2 ? 0 : prev + 1));
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   const prevSlide = () => {
     setCurrentSlide(currentSlide === 0 ? 2 : (prev) => prev - 1);
   };
@@ -30,8 +38,8 @@ const Carousel = () => {
               <div className="carousel-info">
                 <div className="carousel-slide-title">{slide.title}</div>
                 <div className="carousel-slide-description">{slide.desc}</div>
-                <a href="/products">
-                  <button className="carousel-button">DISCOVER</button>
+                <a href="/">
+                  <button className="carousel-button">{slide.button}</button>
                 </a>
               </div>
             </div>

@@ -5,45 +5,58 @@ import { Camera, Search } from "react-feather";
 import axios from "axios";
 import Card from "../components/Card";
 
-const ProductsPage = () => {
+const ProductsCategoryPage = () => {
   const navigate = useNavigate();
-  const { subcategoryId } = useParams();
-  const [productsOfSubcategory, setProductsOfSubcategory] = useState([]);
-  const [subcategoryName, setSubcategoryName] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
+  const { categoryId } = useParams();
+  const [productsOfCategory, setProductsOfCategory] = useState([]);
+  const [category, setCategory] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const getProductsOfSubcategory = async () => {
+  const getCategoryByCategoryId = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3001/products/${subcategoryId}`
+        `http://localhost:3001/category/${categoryId}`
       );
-      setProductsOfSubcategory(response.data);
-      setSubcategoryName(
-        response.data.length > 0 ? response.data[0].subcategory.name : ""
+
+      setCategory(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getProductsOfCategory = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/productsCategory/${categoryId}`
       );
+      setProductsOfCategory(response.data);
     } catch (err) {
       console.error(err);
     }
   };
 
   useEffect(() => {
-    getProductsOfSubcategory();
-  }, [subcategoryId]);
+    getProductsOfCategory();
+    getCategoryByCategoryId();
+  }, []);
 
-  const filteredProducts = productsOfSubcategory.filter((product) => {
-    return product.name.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+  const filteredProducts = productsOfCategory.filter(product => {
+    return product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  })
 
   return (
     <React.Fragment>
-      <h3 className="category-name-products">
-        {subcategoryName && `SELECTION OF OUR ${subcategoryName}`}
-      </h3>
-      <h6 className="category-description-products">
-        Preview our collection. With styles for every kind of look, from the
-        most casual, to the most classic discover the MINIMALIST STUDIO
-        selection.
-      </h6>
+      {category &&
+        category.map((item) => (
+          <div key={item.id}>
+            <h3 className="category-name-products">SHOP NOW {item.name}'S FASHION</h3>
+
+            <h6 className="category-description-products">
+              {item.description}
+            </h6>
+          </div>
+        ))}
+
       <nav className="navbar">
         <div className="navbar-items">
           <div className="navbar-item">
@@ -60,11 +73,6 @@ const ProductsPage = () => {
         </div>
       </nav>
       <div className="products-page">
-        {/* <div className="left-part">
-          <div>SORT BY</div>
-          <div>FILTER</div>
-          <div>ORDER BY</div>
-        </div> */}
         <div className="right-part">
           <div className="products-list">
             {filteredProducts.map((product) => (
@@ -81,4 +89,4 @@ const ProductsPage = () => {
   );
 };
 
-export default ProductsPage;
+export default ProductsCategoryPage;

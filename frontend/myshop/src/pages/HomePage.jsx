@@ -3,8 +3,8 @@ import Carousel from "../components/Carousel";
 import CategoryCard from "../components/CategoryCard";
 import MSubcategoryCarousel from "../components/MSubcategoryCarousel";
 import Newsletter from "../components/Newsletter";
-import ProductCard from "../components/ProductCard";
 import ShopPromo from "../components/ShopPromo";
+import ShopPromoLast from "../components/ShopPromoLast";
 import WSubcategoryCarousel from "../components/WSubcategoryCarousel";
 
 const HomePage = () => {
@@ -14,8 +14,8 @@ const HomePage = () => {
       <ShopPromo />
       <WSubcategoryCarousel />
       <CategoryCard />
+      <ShopPromoLast />
       <MSubcategoryCarousel />
-      <ProductCard />
       <Newsletter />
     </React.Fragment>
   );

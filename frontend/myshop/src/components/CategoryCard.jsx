@@ -1,7 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../styles/CategoryCard.css";
 
 const CategoryCard = () => {
+  const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
+
+  const getCategories = async () => {
+    try {
+      const response = await axios.get("http://localhost:3001/categories");
+      setCategories(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
   return (
     <React.Fragment>
       <div className="shop-by-title">
@@ -11,23 +29,17 @@ const CategoryCard = () => {
         <h1>A luxury shopping experience</h1>
       </div>
       <div className="category-card">
-        <div className="categories">
+        { categories && categories.map ((category) => (
+        <div className="categories" key={category.id}>
           <img
             className="category-image"
-            src="https://www.fashiongonerogue.com/wp-content/uploads/2021/03/Massimo-Dutti-Limited-Edition-Spring-Summer-2021-Campaign02.jpg"
+            src={category.imageURL}
             alt=""
           />
-          <h3>WOMEN</h3>
+          <h3 onClick={() => navigate(`/productsCategory/${category.id}`)}>{category.name}</h3>
         </div>
-        <div className="categories">
-          <img
-            className="category-image"
-            src="https://www.malemodelscene.net/wp-content/uploads/2021/03/Massimo-Dutti-Limited-Edition-Man-SS21-02.jpg"
-            alt=""
-          />
-          <h3>MEN</h3>
+        ))}
         </div>
-      </div>
     </React.Fragment>
   );
 };
