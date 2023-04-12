@@ -13,3 +13,19 @@
   letter-spacing: 2px;
   text-transform: uppercase;
 }
+
+.products-promo {
+  height: 40px;
+  border: 1px solid rgb(214, 209, 209);
+  margin-bottom: 20px;
+}
+
+.products-promo-info {
+  text-align: center;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 10px;
+  color: rgb(128, 38, 38);
+}

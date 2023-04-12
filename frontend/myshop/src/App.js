@@ -1,9 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import AdminPage from "./admin/pages/AdminPage";
 import Accountbar from "./components/Accountbar";
 import Footer from "./components/Footer";
 import Promo from "./components/Promo";
 import Shopbar from "./components/Shopbar";
+import ProtectedRoute from "./components/ProtectedRoute";
+import AuthContext from "./context/AuthContext";
 import "./index.css";
 import AccountPage from "./pages/AccountPage";
 import CartPage from "./pages/CartPage";
@@ -17,30 +20,141 @@ import RegisterPage from "./pages/RegisterPage";
 import WishlistPage from "./pages/WishlistPage";
 
 function App() {
+  const { user } = React.useContext(AuthContext);
+
   return (
     <Router>
-      <Promo />
-      <Accountbar />
-      <Shopbar />
       <Routes>
-        <Route path="/" element={<HomePage />}></Route>
-        <Route path="/login" element={<LoginPage />}></Route>
-        <Route path="/register" element={<RegisterPage />}></Route>
-        <Route path="/cart" element={<CartPage />}></Route>
-        <Route path="/productVariants/:productId" element={<ProductDetail />}></Route>
+        <Route
+          path="/"
+          element={
+            <>
+              <Promo />
+              <Accountbar />
+              <Shopbar />
+              <HomePage />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <>
+              <Promo />
+              <Accountbar />
+              <Shopbar />
+              <LoginPage />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <>
+              <Promo />
+              <Accountbar />
+              <Shopbar />
+              <RegisterPage />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/cart/:cartId"
+          element={
+            <>
+              <Promo />
+              <Accountbar />
+              <Shopbar />
+              <CartPage />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/productVariants/:productId"
+          element={
+            <>
+              <Promo />
+              <Accountbar />
+              <Shopbar />
+              <ProductDetail />
+              <Footer />
+            </>
+          }
+        />
         <Route
           path="/products/:subcategoryId"
-          element={<ProductsPage />}
-        ></Route>
+          element={
+            <>
+              <Promo />
+              <Accountbar />
+              <Shopbar />
+              <ProductsPage />
+              <Footer />
+            </>
+          }
+        />
         <Route
           path="/productsCategory/:categoryId"
-          element={<ProductsCategoryPage />}
+          element={
+            <>
+              <Promo />
+              <Accountbar />
+              <Shopbar />
+              <ProductsCategoryPage />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/wishlist"
+          element={
+            <>
+              <Promo />
+              <Accountbar />
+              <Shopbar />
+              <WishlistPage />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/account"
+          element={
+            <>
+              <Promo />
+              <Accountbar />
+              <Shopbar />
+              <AccountPage />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <>
+              <Promo />
+              <Accountbar />
+              <Shopbar />
+              <CheckoutPage />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute user={user} requiredRole="admin">
+              <AdminPage />
+            </ProtectedRoute>
+          }
         ></Route>
-        <Route path="/wishlist" element={<WishlistPage />}></Route>
-        <Route path="/account" element={<AccountPage />}></Route>
-        <Route path="/checkout" element={<CheckoutPage />}></Route>
       </Routes>
-      <Footer />
+      
     </Router>
   );
 }

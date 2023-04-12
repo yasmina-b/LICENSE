@@ -2,10 +2,13 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToMany,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import CartEntry from "./CartEntry";
 import Product from "./Product";
 import ProductAttributeValue from "./ProductAttributeValue";
 
@@ -15,9 +18,9 @@ export default class ProductVariant extends BaseEntity {
   id: string;
 
   @Column()
-  quantity: number;
+  quantityInStock: number;
 
-  @Column()
+  @Column({ nullable: true })
   addedDate: Date;
 
   @ManyToOne(() => Product, (product) => product, {
@@ -31,4 +34,8 @@ export default class ProductVariant extends BaseEntity {
     { cascade: true }
   )
   productAttributeValues: ProductAttributeValue[];
+
+  @OneToOne(() => CartEntry)
+  @JoinColumn()
+  cartEntry: CartEntry;
 }

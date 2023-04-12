@@ -4,6 +4,7 @@ import bcrypt = require("bcrypt");
 import jwt = require("jsonwebtoken");
 import User from "../entities/User";
 import { AppDataSource } from "../data-source";
+import Cart from "../entities/Cart";
 
 export const register = async (req: Request, res: Response) => {
   const { email, firstName, lastName, password, confirmPassword } = req.body;
@@ -45,6 +46,22 @@ export const register = async (req: Request, res: Response) => {
     });
 
     const result = await user.save();
+
+    const cart = AppDataSource.getRepository(Cart).create({
+      user: {
+        id: user.id,
+      },
+    });
+
+    await cart.save();
+
+    // Find the created cart and assign it to the user
+    const createdCart = await AppDataSource.getRepository(Cart).findOne({
+      where: { id: cart.id },
+    });
+    user.cart = createdCart;
+
+    await user.save();
     return res.json(result);
   } catch (error) {
     console.log(error);
@@ -77,6 +94,14 @@ export const login = async (req: Request, res: Response) => {
       { id, email, isAdmin },
       process.env.ACCESS_TOKEN_SECRET
     );
+
+    const cart = await AppDataSource.getRepository(Cart).findOne({
+      where: {
+        user: { id: user.id },
+      },
+    });
+
+    user.cart = cart;
 
     return res.json({ user, token });
   } catch (error) {

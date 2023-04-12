@@ -54,6 +54,77 @@ export const getProductAttributeValuesByProductVariantId = async (
   }
 };
 
+// export const getProductVariantByProductAttributeValue = async (
+//   req: Request,
+//   res: Response
+// ) => {
+//   const { productId, productAttributeValueId } = req.body;
+
+//   try {
+//     const productVariant = await AppDataSource.getRepository(ProductVariant)
+//       .createQueryBuilder("pv")
+//       .leftJoin("pv.product", "p")
+//       .leftJoin("pv.productAttributeValues", "pav")
+//       .where("p.id = :productId", { productId })
+//       .andWhere("pav.id = :productAttributeValueId", {
+//         productAttributeValueId,
+//       })
+//       .getOne();
+
+//     if (!productVariant) {
+//       return res.status(404).json({ message: "ProductVariant not found" });
+//     }
+
+//     return res.json(productVariant);
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).json(error);
+//   }
+// };
+
+export const getProductVariantByProductAttributeValue = async (
+  req: Request,
+  res: Response
+) => {
+  const { productId, productAttributeValueId } = req.body;
+
+  try {
+    const productVariant = await AppDataSource.getRepository(ProductVariant)
+      .createQueryBuilder("pv")
+      .leftJoin("pv.product", "p")
+      .leftJoin("pv.productAttributeValues", "pav")
+      .where("p.id = :productId", { productId })
+      .andWhere("pav.id = :productAttributeValueId", {
+        productAttributeValueId,
+      })
+      .getOne();
+
+    if (!productVariant) {
+      return res.status(404).json({ message: "ProductVariant not found" });
+    }
+
+    // Fetch the product of the product variant
+    const product = await AppDataSource.getRepository(Product)
+      .createQueryBuilder("p")
+      .leftJoin("p.productVariants", "pv")
+      .where("pv.id = :productVariantId", {
+        productVariantId: productVariant.id,
+      })
+      .getOne();
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Attach the product to the product variant and return the result
+    productVariant.product = product;
+    return res.json(productVariant);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
 export const getProductVariantByProductVariantId = async (
   req: Request,
   res: Response
@@ -93,7 +164,7 @@ export const createProductVariant = async (
   req: AuthenticatedRequest,
   res: Response
 ) => {
-  const { quantity, price, addedDate } = req.body;
+  const { quantityInStock, addedDate } = req.body;
   const { tkUser } = req;
   const { productId } = req.params;
   const { productAttributeValueId } = req.body;
@@ -134,7 +205,7 @@ export const createProductVariant = async (
     }
 
     const productVariant = AppDataSource.getRepository(ProductVariant).create({
-      quantity,
+      quantityInStock,
       addedDate,
       product,
     });
@@ -157,5 +228,6 @@ module.exports = {
   getAllProductVariants,
   getProductVariantByProductVariantId,
   getProductAttributeValuesByProductVariantId,
+  getProductVariantByProductAttributeValue,
   createProductVariant,
 };

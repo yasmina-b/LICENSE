@@ -5,6 +5,7 @@ import Subcategory from "../entities/Subcategory";
 import Product from "../entities/Product";
 import ProductAttributeValue from "../entities/ProductAttributeValue";
 import Category from "../entities/Category";
+import { Not } from "typeorm";
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
@@ -16,6 +17,28 @@ export const getAllProducts = async (req: Request, res: Response) => {
       ],
     });
     return res.json(products);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+export const getRelatedProducts = async (req: Request, res: Response) => {
+  try {
+    const subcategoryId = req.params.subcategoryId;
+    const productId = req.params.productId;
+
+    const relatedProducts = await AppDataSource.getRepository(Product)
+      .createQueryBuilder("product")
+      .where(
+        "product.subcategory = :subcategoryId AND product.id != :productId",
+        { subcategoryId, productId }
+      )
+      .leftJoinAndSelect("product.subcategory", "subcategory")
+      .take(4)
+      .getMany();
+
+    return res.json(relatedProducts);
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
@@ -103,7 +126,10 @@ export const getProductsByCategoryId = async (req: Request, res: Response) => {
   }
 };
 
-export const getProductsFromFirstCategory = async (req: Request, res: Response) => {
+export const getProductsFromFirstCategory = async (
+  req: Request,
+  res: Response
+) => {
   try {
     const category = await AppDataSource.getRepository(Category).findOne({
       where: {},
@@ -111,7 +137,9 @@ export const getProductsFromFirstCategory = async (req: Request, res: Response) 
       relations: ["subcategories", "subcategories.products"],
     });
     const subcategories = category ? category.subcategories : [];
-    const productsList = subcategories.flatMap((subcategory) => subcategory.products);
+    const productsList = subcategories.flatMap(
+      (subcategory) => subcategory.products
+    );
 
     return res.json(productsList);
   } catch (error) {
@@ -120,7 +148,10 @@ export const getProductsFromFirstCategory = async (req: Request, res: Response) 
   }
 };
 
-export const getProductsFromLastCategory = async (req: Request, res: Response) => {
+export const getProductsFromLastCategory = async (
+  req: Request,
+  res: Response
+) => {
   try {
     const category = await AppDataSource.getRepository(Category).findOne({
       where: {},
@@ -128,7 +159,9 @@ export const getProductsFromLastCategory = async (req: Request, res: Response) =
       relations: ["subcategories", "subcategories.products"],
     });
     const subcategories = category ? category.subcategories : [];
-    const productsList = subcategories.flatMap((subcategory) => subcategory.products);
+    const productsList = subcategories.flatMap(
+      (subcategory) => subcategory.products
+    );
 
     return res.json(productsList);
   } catch (error) {
@@ -219,6 +252,7 @@ export const deleteProduct = async (
 
 module.exports = {
   getAllProducts,
+  getRelatedProducts,
   getProductsBySubcategoryId,
   getProductsByCategoryId,
   getProductAttributeValuesByProductId,

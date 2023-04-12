@@ -4,6 +4,7 @@ import {
   createProductVariant,
   getAllProductVariants,
   getProductAttributeValuesByProductVariantId,
+  getProductVariantByProductAttributeValue,
   getProductVariantByProductVariantId,
   getProductVariantsByProductId,
 } from "../services/ProductVariantService";
@@ -20,6 +21,7 @@ router.get(
   getProductAttributeValuesByProductVariantId
 );
 router.get("/productVariants", getAllProductVariants);
+router.get("/productVariantBySize", getProductVariantByProductAttributeValue);
 router.post("/admin/productVariant/:productId", createProductVariant);
 
 module.exports = router;

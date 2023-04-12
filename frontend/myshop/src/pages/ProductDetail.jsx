@@ -1,15 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "../styles/ProductDetail.css";
+import ProductsPromo from "../components/ProductsPromo";
+import Card from "../components/Card";
+import { Plus, Minus, X } from "react-feather";
+import AuthContext from "../context/AuthContext";
 
 const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [productVariants, setProductVariants] = useState([]);
   const [productAttributeValues, setProductAttributeValues] = useState([]);
   const [product, setProduct] = useState([]);
+  const [selectedProductAttributeValue, setSelectedProductAttributeValue] =
+    useState(null);
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [quantityInCart, setQuantityInCart] = useState(1);
+  const [pricePerEntry, setPricePerEntry] = useState("");
+  const [totalPriceEntry, setTotalPriceEntry] = useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   const { productId } = useParams();
+  const navigate = useNavigate();
+  const { user } = React.useContext(AuthContext);
+
+  console.log(user);
 
   const getProductVariantsOfProduct = async () => {
     try {
@@ -41,15 +57,28 @@ const ProductDetail = () => {
     }
   };
 
+  const getRelatedProducts = async (productId, subcategoryId) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:3001/relatedProducts/${productId}/${subcategoryId}`
+      );
+      setRelatedProducts(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const getProductByProductId = async (productId) => {
     try {
       const res = await axios.get(`http://localhost:3001/product/${productId}`);
       const productWithImages = res.data.map((item) => {
         const firstImageURL = item.firstImageURL;
         const secondImageURL = item.secondImageURL;
+        const subcategoryId = item.subcategory.id;
         return {
           ...item,
           images: [firstImageURL, secondImageURL],
+          subcategoryId: subcategoryId,
         };
       });
       setProduct(productWithImages);
@@ -62,80 +91,159 @@ const ProductDetail = () => {
     setSelectedImage(index);
   };
 
-  console.log(product[selectedImage]?.images);
-
   useEffect(() => {
-    //getProductVariantsOfProduct(productId);
+    getProductVariantsOfProduct(productId);
     getProductAttributeValuesOfProduct(productId);
     getProductByProductId(productId);
   }, [productId]);
 
+  useEffect(() => {
+    if (selectedProductAttributeValue) {
+      const selectedVariant = productVariants.find((variant) =>
+        variant.productAttributeValues.some(
+          (value) => value.id === selectedProductAttributeValue.id
+        )
+      );
+      setSelectedVariant(selectedVariant);
+    }
+  }, [selectedProductAttributeValue, productVariants]);
+
+  useEffect(() => {
+    if (product.length > 0) {
+      const subcategoryId = product[0].subcategory.id;
+      getRelatedProducts(productId, subcategoryId);
+    }
+  }, [product]);
+
+  useEffect(() => {
+    setIsButtonDisabled(!selectedProductAttributeValue);
+  }, [selectedProductAttributeValue]);
+
+  // const handleAddToBag = () => {
+  //   if (selectedVariant) {
+  //     const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  //     const isVariantAlreadyInCart = cart.some(
+  //       (variant) => variant.id === selectedVariant.id
+  //     );
+  //     if (!isVariantAlreadyInCart) {
+  //       cart.push(selectedVariant);
+  //       localStorage.setItem("cart", JSON.stringify(cart));
+  //       alert("Product added to cart!");
+  //     } else {
+  //       alert("Product is already in cart!");
+  //     }
+  //   }
+  // };
+
+  const handleAddToBag = async () => {
+    if (selectedVariant) {
+      try {
+        const res = await axios.post("http://localhost:3001/cartEntries", {
+          quantityInCart,
+          pricePerEntry: selectedVariant.product.price,
+          totalPriceEntry: quantityInCart * selectedVariant.product.price,
+          productVariant: selectedVariant.id,
+          cartId: user.user.cart.id
+        });
+
+        if (res.status === 200) {
+          alert("added to cart");
+          console.log(res.data);
+        }
+      } catch (err) {
+        console.log(err.response.data);
+      }
+    }
+  };
+
+  console.log(selectedVariant);
+
   return (
     <React.Fragment>
+      <ProductsPromo />
       <div className="product-details">
         <div className="left-container">
           <div className="images">
-            {product[selectedImage]?.images?.map((image, index) => (
-              <img
-                src={image}
-                alt=""
-                key={index}
-                onClick={() => handleImageClick(index)}
-              />
-            ))}
+            {product.length > 0 &&
+              product[0]?.images?.map((image, index) => (
+                <img
+                  src={image}
+                  alt=""
+                  key={index}
+                  onClick={() => handleImageClick(index)}
+                />
+              ))}
           </div>
           <div className="main-image">
-            <img src={product[selectedImage]?.images?.[selectedImage]} alt="" />
+            <img src={product[0]?.images[selectedImage]} alt="" />
           </div>
         </div>
-        <div className="right-container">
-          {/* {productVariants &&
-            productVariants.map((productVariant) => (
-              <div key={productVariant.id}>
-                <h1>{productVariant.product.name}</h1>
-                <div className="product-description">
-                  {productVariant.product.description}
-                </div>
-                <div>Quantity: {productVariant.quantity}</div>
-                <div className="product-price">
-                  {" "}
-                  RON {productVariant.product.price}
-                </div>
-                <label className="size-select-label">SIZES AVAILABLE:</label>
-                <ul>
-                  {productVariant.productAttributeValues.map(
-                    (attributeValue) => (
-                      <select className="select-size" key={attributeValue.id}>
-                        <option>{attributeValue.value}</option>
-                      </select>
-                    )
-                  )}
-                </ul>
-              </div>
-            ))} */}
 
+        <div className="right-container">
           {product &&
             product.map((item) => (
               <div key={item.id}>
                 <h1 className="product-name">{item.name}</h1>
                 <div className="product-description">{item.description}</div>
-                <div className="product-price">RON {item.price}.00</div>
+
+                <div className="product-info-title">QUANTITY</div>
+                <div className="cart-amount">
+                  <Plus
+                    onClick={() => setQuantityInCart((prev) => prev + 1)}
+                  ></Plus>
+                  <div className="cart-product-amount">{quantityInCart}</div>
+                  <Minus
+                    onClick={() =>
+                      setQuantityInCart((prev) => (prev === 1 ? 1 : prev - 1))
+                    }
+                  ></Minus>
+                </div>
+                <div className="product-price">
+                  RON {item.price * quantityInCart}.00
+                </div>
+                <div className="product-info-title">DETAILS</div>
+                <div className="product-info">{item.info}</div>
               </div>
             ))}
           <div className="size-select-label">SELECT YOUR SIZE:</div>
           <div className="select-size-container">
             {productAttributeValues.map((productAttributeValue) => (
               <div key={productAttributeValue.id}>
-                <option className="select-size">
+                <option
+                  className="select-size"
+                  onClick={(e) => {
+                    setSelectedProductAttributeValue(productAttributeValue);
+                    e.target.classList.add("selected");
+                  }}
+                >
                   {productAttributeValue.value}
                 </option>
               </div>
             ))}
           </div>
           <div className="buttons-position">
-            <button className="cart-button">ADD TO BAG</button>
+            <button
+              id="myButton"
+              className="cart-button"
+              onClick={handleAddToBag}
+              disabled={isButtonDisabled}
+            >
+              ADD TO BAG
+            </button>
           </div>
         </div>
+      </div>
+      <div className="related-products">YOU MIGHT ALSO LIKE</div>
+      <div className="related-products-list">
+        {relatedProducts.map((relatedProduct) => (
+          <React.Fragment key={relatedProduct.id}>
+            <div
+              onClick={() => navigate(`/productVariants/${relatedProduct.id}`)}
+            >
+              <Card item={relatedProduct} />
+            </div>
+          </React.Fragment>
+        ))}
       </div>
     </React.Fragment>
   );

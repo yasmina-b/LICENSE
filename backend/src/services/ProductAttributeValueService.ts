@@ -11,7 +11,9 @@ export const getAllProductAttributeValues = async (
   try {
     const productAttributeValues = await AppDataSource.getRepository(
       ProductAttributeValue
-    ).find();
+    ).find({
+      relations: ["productVariants.productAttributeValues"]
+    });
     return res.json(productAttributeValues);
   } catch (error) {
     console.log(error);

@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Camera, Search } from "react-feather";
 import axios from "axios";
 import Card from "../components/Card";
+import ProductsPromo from "../components/ProductsPromo";
 
 const ProductsPage = () => {
   const navigate = useNavigate();
@@ -44,6 +45,7 @@ const ProductsPage = () => {
         most casual, to the most classic discover the MINIMALIST STUDIO
         selection.
       </h6>
+      <ProductsPromo />
       <nav className="navbar">
         <div className="navbar-items">
           <div className="navbar-item">
