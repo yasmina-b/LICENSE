@@ -15,7 +15,7 @@ export default class Cart extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
+  @Column({ nullable: true })
   totalSum: number;
 
   @OneToOne(() => User, (user) => user.cart)
@@ -24,6 +24,8 @@ export default class Cart extends BaseEntity {
   @OneToMany(() => CartEntry, (cartEntry) => cartEntry.cart)
   cartEntries: CartEntry[];
 
-  @OneToOne(() => Order, (order) => order.cart)
-  order: Order;
+  // @OneToOne(() => Order, (order) => order.cart)
+  // order: Order;
+  @OneToMany(() => Order, (order) => order.cart)
+  orders: Order[];
 }

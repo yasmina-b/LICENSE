@@ -1,0 +1,17 @@
+.table-position {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+  height: 100vh;
+  margin-top: -280px;
+  margin-left: 450px;
+}
+
+.tabel-title {
+  text-align: center;
+  font-weight: 600;
+  font-size: 27px;
+  margin-left: 50px;
+  margin-top: 70px;
+}

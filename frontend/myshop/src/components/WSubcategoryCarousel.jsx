@@ -71,8 +71,8 @@ const WSubcategoryCarousel = () => {
         <Slider {...settings}>
           {subcategoriesList &&
             subcategoriesList.map((subcategory) => (
-              <div className="slider-card">
-                <div className="slider-card-container">
+              <div className="slider-card" key={subcategory.id}>
+                <div className="slider-card-container" key={subcategory.id}>
                   <div
                     className="slider-image-container"
                     onClick={() => navigate(`/products/${subcategory.id}`)}

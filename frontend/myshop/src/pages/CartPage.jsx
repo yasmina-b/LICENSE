@@ -1,98 +1,150 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../styles/Cart.css";
-import { Plus, Minus, X } from "react-feather";
+import { X } from "react-feather";
+import ProductsPromo from "../components/ProductsPromo";
+import AuthContext from "../context/AuthContext";
 
 const CartPage = () => {
+  const [cartEntries, setCartEntries] = useState([]);
+  const [allProductVariants, setAllProductVariants] = useState([]);
+  const [cartTotal, setCartTotal] = useState([]);
+  const { user } = React.useContext(AuthContext);
+
+  const cartId = user.user.cart.id;
+
+  const getCartEntries = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:3001/cartEntries/${cartId}`
+      );
+      setCartEntries(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const deleteCartEntry = async (cartEntryId) => {
+    try {
+      const res = await axios.delete(
+        `http://localhost:3001/cartEntry/${cartEntryId}`
+      );
+      if (res.status === 200) {
+        const newProductVariants = allProductVariants.filter(
+          (variant) => variant.cartEntry.id !== cartEntryId
+        );
+        setAllProductVariants(newProductVariants);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getProductVariantByCartEntryId = async (cartEntryId) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:3001/productVariantInCart/${cartEntryId}`
+      );
+      return res.data;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getCartTotalSum = async () => {
+    try {
+      const res = await axios.get(`http://localhost:3001/cartTotal/${cartId}`);
+      setCartTotal(res.data);
+      return res.data;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getCartEntries();
+    getCartTotalSum();
+  }, []);
+
+  useEffect(() => {
+    const fetchProductVariants = async () => {
+      const productVariants = [];
+      if (cartEntries.length > 0) {
+        for (const entry of cartEntries) {
+          const variant = await getProductVariantByCartEntryId(entry.id);
+          productVariants.push(variant);
+        }
+        setAllProductVariants(productVariants);
+      }
+    };
+
+    fetchProductVariants();
+  }, [cartEntries]);
+
+  useEffect(() => {
+    if (allProductVariants.length > 0) {
+      // console.log(allProductVariants);
+    }
+  }, [allProductVariants]);
+
   return (
     <React.Fragment>
-      {/* <h2 className="empty-cart-title">YOUR SHOPPING BAG IS EMPTY...</h2>
-    <div className="empty-cart-button-position">
-        <button className="empty-cart-button">CONTINUE SHOPPING</button>
-    </div> */}
+      <ProductsPromo />
       <div className="cart-wrapper">
-        <h1 className="cart-title">YOUR SHOPPING BAG (1)</h1>
-        <div className="cart-top">
-          <a href="/products">
-            <button className="cart-top-buttons">CONTINUE SHOPPING</button>
-          </a>
-          <a href="/checkout">
-            <button className="cart-top-buttons-checkout">
-              PROCEED TO CHECKOUT
-            </button>
-          </a>
-        </div>
-        <div className="cart-bottom">
-          <div className="cart-info">
-            <div className="cart-product">
-              <div className="cart-details">
-                <img
-                  className="cart-product-image"
-                  src="https://images.lvrcdn.com/BigRetina77I/Y7H/014_4f2963f5-80c2-4f7a-8364-68d253eed7ef.JPG"
-                  alt=""
-                ></img>
-                <div className="cart-product-details">
-                  <span className="cart-product-name">
-                    TEST SHOES PRODUCT CART
-                  </span>
-                  <span>CATEGORY</span>
-                  <span>SUBCATEGORY</span>
-                  <span>SIZE: 38</span>
-                </div>
-                <div className="cart-amount-details">
-                  <X className="cart-close-button" />
-                  <div className="cart-amount">
-                    <Plus></Plus>
-                    <div className="cart-product-amount">1</div>
-                    <Minus></Minus>
+        {allProductVariants &&
+          allProductVariants.map((item, index) => (
+            <div className="cart-bottom" key={index}>
+              <div className="cart-info">
+                <div className="cart-product">
+                  <div className="cart-details">
+                    <img
+                      className="cart-product-image"
+                      src={item.product.firstImageURL}
+                      alt=""
+                    ></img>
+                    <div className="cart-product-details">
+                      <div>{item.cartEntry.id}</div>
+                      <span className="cart-product-name">
+                        {item.product.name}
+                      </span>
+                      <span className="cart-product-description">
+                        {item.product.description}
+                      </span>
+                      <span>Size: {item.productAttributeValues[0].value}</span>
+                      <span>Quantity: {item.cartEntry.quantityInCart}</span>
+                      <span className="cart-product-name">
+                        Total RON : {item.cartEntry.totalPriceEntry}
+                      </span>
+                    </div>
+                    <div className="cart-amount-details">
+                      <X
+                        className="cart-close-button"
+                        onClick={() => deleteCartEntry(item.cartEntry.id)}
+                      />
+                    </div>
                   </div>
-                  <div className="cart-product-price">RON 10000.000</div>
                 </div>
               </div>
             </div>
-            <div className="cart-product">
-              <div className="cart-details">
-                <img
-                  className="cart-product-image"
-                  src="https://images.lvrcdn.com/BigRetina77I/Y7H/014_4f2963f5-80c2-4f7a-8364-68d253eed7ef.JPG"
-                  alt=""
-                ></img>
-                <div className="cart-product-details">
-                  <span className="cart-product-name">
-                    TEST SHOES PRODUCT CART
-                  </span>
-                  <span>CATEGORY</span>
-                  <span>SUBCATEGORY</span>
-                  <span>SIZE: 38</span>
+          ))}
+
+        <div className="cart-summary">
+          <div className="cart-summary-title">ORDER SUMMARY</div>
+          {allProductVariants &&
+            allProductVariants.map((item, index) => (
+              <div className="cart-summary-item" key={index}>
+                <div>
+                  {item.product.name} : {item.productAttributeValues[0].value} X{" "}
+                  {item.cartEntry.quantityInCart}
                 </div>
-                <div className="cart-amount-details">
-                  <X className="cart-close-button" />
-                  <div className="cart-amount">
-                    <Plus></Plus>
-                    <div className="cart-product-amount">1</div>
-                    <Minus></Minus>
-                  </div>
-                  <div className="cart-product-price">RON 10000.000</div>
-                </div>
+                <div>RON {item.cartEntry.totalPriceEntry}.00</div>
               </div>
-            </div>
+            ))}
+          <div className="cart-summary-item">
+            <div className="cart-total">TOTAL : </div>
+            <div className="cart-total-price">RON {cartTotal.totalSum}.00</div>
           </div>
-          <div className="cart-summary">
-            <div className="cart-summary-title">ORDER SUMMARY</div>
-            <div className="cart-summary-item">
-              <div>TEST</div>
-              <div>RON 1000.00</div>
-            </div>
-            {/* <div className="cart-summary-item">
-              <div>ENTER PROMO CODE</div>
-              <input className="input-code"></input>
-              <button className="input-code-button">GO</button>
-            </div> */}
-            <div className="cart-summary-item">
-              <div className="cart-total">TOTAL</div>
-              <div className="cart-total-price">RON 1000.00</div>
-            </div>
-            <button className="cart-summary-button">ORDER NOW</button>
-          </div>
+          <button className="cart-summary-button">PROCEED TO CHECKOUT</button>
         </div>
       </div>
     </React.Fragment>

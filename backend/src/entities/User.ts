@@ -4,14 +4,12 @@ import {
   Column,
   BaseEntity,
   BeforeInsert,
-  ManyToOne,
   OneToOne,
   JoinColumn,
   OneToMany,
 } from "typeorm";
 import { IsEmail, Length } from "class-validator";
 import bcrypt = require("bcrypt");
-import Address from "./Address";
 import Cart from "./Cart";
 import Order from "./Order";
 
@@ -42,9 +40,6 @@ export default class User extends BaseEntity {
 
   @Column({ default: false })
   isAdmin: boolean;
-
-  @ManyToOne(() => Address, (address) => address, { eager: true })
-  address: Address;
 
   @OneToOne(() => Cart)
   @JoinColumn()

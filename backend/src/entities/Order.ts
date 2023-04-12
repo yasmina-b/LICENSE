@@ -7,7 +7,6 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import Address from "./Address";
 import Cart from "./Cart";
 import User from "./User";
 
@@ -17,19 +16,36 @@ export default class Order extends BaseEntity {
   id: string;
 
   @Column()
-  total: number;
+  firstName: String;
 
   @Column()
+  lastName: String;
+
+  @Column()
+  email: String;
+
+  @Column()
+  phoneNumber: String;
+
+  @Column()
+  address: String;
+
+  @Column()
+  city: String;
+
+  @Column()
+  postalCode: String;
+
+  @Column({ nullable: true })
   orderDate: Date;
 
   @ManyToOne(() => User, (user) => user, { eager: true })
   user: User;
 
-  @OneToOne(() => Cart)
-  @JoinColumn()
-  cart: Cart;
+  // @OneToOne(() => Cart)
+  // @JoinColumn()
+  // cart: Cart;
 
-  @OneToOne(() => Address)
-  @JoinColumn()
-  shippingAddress: Address;
+  @ManyToOne(() => Cart, (cart) => cart, { eager: true })
+  cart: Cart;
 }

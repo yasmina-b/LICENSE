@@ -4,13 +4,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Camera, Search } from "react-feather";
 import axios from "axios";
 import Card from "../components/Card";
+import ProductsPromo from "../components/ProductsPromo";
 
 const ProductsCategoryPage = () => {
   const navigate = useNavigate();
   const { categoryId } = useParams();
   const [productsOfCategory, setProductsOfCategory] = useState([]);
   const [category, setCategory] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   const getCategoryByCategoryId = async () => {
     try {
@@ -40,23 +41,25 @@ const ProductsCategoryPage = () => {
     getCategoryByCategoryId();
   }, []);
 
-  const filteredProducts = productsOfCategory.filter(product => {
-    return product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  })
+  const filteredProducts = productsOfCategory.filter((product) => {
+    return product.name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   return (
     <React.Fragment>
       {category &&
         category.map((item) => (
           <div key={item.id}>
-            <h3 className="category-name-products">SHOP NOW {item.name}'S FASHION</h3>
+            <h3 className="category-name-products">
+              SHOP NOW {item.name}'S FASHION
+            </h3>
 
             <h6 className="category-description-products">
               {item.description}
             </h6>
           </div>
         ))}
-
+      <ProductsPromo />
       <nav className="navbar">
         <div className="navbar-items">
           <div className="navbar-item">

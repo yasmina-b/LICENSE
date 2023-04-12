@@ -13,6 +13,8 @@ import productRoutes = require("./controllers/ProductController");
 import productAttributeRoutes = require("./controllers/ProductAttributeController");
 import productAttributeValueRoutes = require("./controllers/ProductAttributeValueController");
 import productVariantRoutes = require("./controllers/ProductVariantController");
+import cartRoutes = require("./controllers/CartController");
+import orderRoutes = require("./controllers/OrderController");
 
 AppDataSource.initialize()
   .then(() => {
@@ -26,6 +28,8 @@ AppDataSource.initialize()
     app.use(productAttributeRoutes);
     app.use(productAttributeValueRoutes);
     app.use(productVariantRoutes);
+    app.use(cartRoutes);
+    app.use(orderRoutes);
 
     app.listen(3001, function () {
       console.log(`Backend server running on port ${3001}`);

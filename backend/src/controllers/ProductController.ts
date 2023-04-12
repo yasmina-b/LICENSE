@@ -10,10 +10,12 @@ import {
   getProductsBySubcategoryId,
   getProductsFromFirstCategory,
   getProductsFromLastCategory,
+  getRelatedProducts,
 } from "../services/ProductService";
 const router = express.Router();
 
 router.get("/products", getAllProducts);
+router.get("/relatedProducts/:productId/:subcategoryId", getRelatedProducts);
 router.get("/productsFirst", getProductsFromFirstCategory);
 router.get("/productsLast", getProductsFromLastCategory);
 router.get("/product/:productId", getProductByProductId);

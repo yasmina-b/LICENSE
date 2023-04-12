@@ -6,8 +6,10 @@ import { AuthenticatedRequest } from "../middleware/verifyToken";
 export const getAllUsers = async (req: AuthenticatedRequest, res: Response) => {
   const { tkUser } = req;
 
-  //   if (!tkUser.isAdmin)
-  //     return res.status(401).json("You are not authorized to see all users");
+  console.log("tkuser", tkUser);
+
+  if (!tkUser.isAdmin)
+    return res.status(401).json("You are not authorized to see all users");
 
   try {
     const users = await AppDataSource.getRepository(User).find({
