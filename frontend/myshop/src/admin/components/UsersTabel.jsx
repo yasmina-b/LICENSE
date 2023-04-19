@@ -1,93 +1,102 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import "../styles/Tabels.css";
 import AuthContext from "../../context/AuthContext";
+import { Box } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 
 export default function UsersTabel() {
   const { user } = React.useContext(AuthContext);
   const [users, setUsers] = useState([]);
-
-  // const getUsers = async () => {
-  //   try {
-  //     const userTk = user.token;
-  //     const response = await axios.get("/admin/users", {
-  //       headers: {
-  //         Authorization: `Bearer ${userTk}`,
-  //       },
-  //     });
-  //     setUsers(response.data);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getUsers();
-  // }, [user.token]);
+  const [pageSize, setPageSize] = useState(10);
+  const [activeRowId, setActiveRowId] = useState(null);
 
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const userTk = user.token;
-        console.log("here",user.token);
-        const res = await axios.get("/admin/users", {
-          headers: {
-            Authorization: `Bearer ${userTk}`,
-          },
-        });
-        setUsers(res.data);
-      } catch (error) {
-        console.log(error);
+        if (user?.token) {
+          const response = await axios.get(
+            "http://localhost:3001/admin/users",
+            {
+              headers: {
+                Authorization: `Bearer ${user.token}`,
+              },
+            }
+          );
+          setUsers(response.data);
+        }
+      } catch (err) {
+        console.error(err);
       }
     };
-    getUsers();
-  }, [user.token]);
 
-  console.log(users);
+    getUsers();
+  }, [user]);
+
+  const columns = useMemo(
+    () => [
+      {
+        field: "lastName",
+        headerName: "Last Name",
+        width: 180,
+        align: "center",
+        headerAlign: "center",
+      },
+      {
+        field: "firstName",
+        headerName: "First Name",
+        width: 180,
+        align: "center",
+        headerAlign: "center",
+      },
+      {
+        field: "email",
+        headerName: "Email",
+        width: 180,
+        align: "center",
+        headerAlign: "center",
+      },
+      {
+        field: "phoneNumber",
+        headerName: "Phone number",
+        width: 180,
+        align: "center",
+        headerAlign: "center",
+      },
+      {
+        field: "isAdmin",
+        headerName: "isAdmin",
+        width: 180,
+        type: "boolean",
+        editable: true,
+      },
+    ],
+    [activeRowId]
+  );
 
   return (
     <React.Fragment>
-      <h1 className="tabel-title">USERS OF MINIMALIST STUDIO</h1>
+      <div className="tabel-title">ALL USERS</div>
       <div className="table-position">
-        <TableContainer component={Paper}>
-          <Table sx={{ Width: 500 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ fontWeight: 700 }} align="center">
-                  First Name
-                </TableCell>
-                <TableCell sx={{ fontWeight: 700 }} align="center">
-                  Last Name
-                </TableCell>
-                <TableCell sx={{ fontWeight: 700 }} align="center">
-                  Email
-                </TableCell>
-                <TableCell sx={{ fontWeight: 700 }} align="center">
-                  Phone number
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell component="th" scope="row">
-                    {user.firstName}
-                  </TableCell>
-                  <TableCell align="center">{user.lastName}</TableCell>
-                  <TableCell align="center">{user.email}</TableCell>
-                  <TableCell align="center">{user.phoneNumber}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <div style={{ marginTop: "50px" }}>
+          <Box sx={{ height: 210 }}>
+            <DataGrid
+              className="custom-datagrid"
+              columns={columns}
+              rows={users}
+              pageSize={pageSize}
+              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+              rowsPerPageOptions={[5, 10, 20, 30]}
+              sx={{
+                "& .css-gl260s-MuiDataGrid-columnHeadersInner": {
+                  color: "black",
+                  backgroundColor: "#d8d1d1",
+                },
+              }}
+              onCellEditCommit={(params) => setActiveRowId(params.id)}
+            />
+          </Box>
+        </div>
       </div>
     </React.Fragment>
   );

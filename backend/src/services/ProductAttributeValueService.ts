@@ -12,7 +12,7 @@ export const getAllProductAttributeValues = async (
     const productAttributeValues = await AppDataSource.getRepository(
       ProductAttributeValue
     ).find({
-      relations: ["productVariants.productAttributeValues"]
+      relations: ["productVariants.productAttributeValues"],
     });
     return res.json(productAttributeValues);
   } catch (error) {
@@ -30,11 +30,11 @@ export const createProductAttributeValue = async (
   const { productAttributeId } = req.params;
 
   try {
-    // if (!tkUser.isAdmin) {
-    //   return res
-    //     .status(401)
-    //     .json("You are not authorized to create product attribute values!");
-    // }
+    if (!tkUser.isAdmin) {
+      return res
+        .status(401)
+        .json("You are not authorized to create product attribute values!");
+    }
     const productAttribute = await AppDataSource.getRepository(
       ProductAttribute
     ).findOne({

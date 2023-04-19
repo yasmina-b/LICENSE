@@ -8,6 +8,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import AuthContext from "../../context/AuthContext";
 
 export default function AddCategory() {
   const [open, setOpen] = React.useState(false);
@@ -16,14 +17,24 @@ export default function AddCategory() {
   const [description, setDescription] = useState("");
   const [categoryCreated, setCategoryCreated] = useState(false);
 
+  const { user } = React.useContext(AuthContext);
+
   const createCategory = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3001/admin/category", {
-        name,
-        imageURL,
-        description,
-      });
+      const res = await axios.post(
+        "http://localhost:3001/admin/category",
+        {
+          name,
+          imageURL,
+          description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
 
       if (res.status === 200) {
         console.log(res.data);
@@ -55,7 +66,8 @@ export default function AddCategory() {
           color: "black",
           fontSize: 14,
           backgroundColor: "white",
-          fontFamily: "Futura-Medium, Century Gothic, Gill Sans, Helvetica, Arial, sans-serif",
+          fontFamily:
+            "Futura-Medium, Century Gothic, Gill Sans, Helvetica, Arial, sans-serif",
           border: "black",
           "&:hover": {
             backgroundColor: "#d8d1d1",

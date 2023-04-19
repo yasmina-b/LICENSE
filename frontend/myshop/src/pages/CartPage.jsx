@@ -103,7 +103,6 @@ const CartPage = () => {
                       alt=""
                     ></img>
                     <div className="cart-product-details">
-                      <div>{item.cartEntry.id}</div>
                       <span className="cart-product-name">
                         {item.product.name}
                       </span>
@@ -144,7 +143,9 @@ const CartPage = () => {
             <div className="cart-total">TOTAL : </div>
             <div className="cart-total-price">RON {cartTotal.totalSum}.00</div>
           </div>
-          <button className="cart-summary-button">PROCEED TO CHECKOUT</button>
+          <a href="/checkout">
+            <button className="cart-summary-button">PROCEED TO CHECKOUT</button>
+          </a>
         </div>
       </div>
     </React.Fragment>

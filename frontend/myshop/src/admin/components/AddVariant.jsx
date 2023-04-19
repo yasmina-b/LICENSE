@@ -9,16 +9,18 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
+import AuthContext from "../../context/AuthContext";
 
 export default function AddVariant() {
   const [open, setOpen] = React.useState(false);
   const [quantity, setQuantity] = useState("");
-  const [addedDate, setAddedDate] = useState("");
   const [variantCreated, setVariantCreated] = useState(false);
   const [products, setProducts] = useState([]);
   const [productAttributeValues, setProductAttributeValues] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedAttributeValue, setSelectedAttributeValue] = useState("");
+
+  const { user } = React.useContext(AuthContext);
 
   const getProducts = async () => {
     try {
@@ -47,7 +49,11 @@ export default function AddVariant() {
         `http://localhost:3001/admin/productVariant/${productId}`,
         {
           quantity,
-          addedDate,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
         }
       );
 
@@ -72,7 +78,6 @@ export default function AddVariant() {
 
   const handleClose = () => {
     setQuantity("");
-    setAddedDate("");
     setSelectedProduct("");
     setSelectedAttributeValue("");
     setOpen(false);
@@ -130,17 +135,6 @@ export default function AddVariant() {
             onChange={(e) => setQuantity(e.target.value)}
           />
           <TextField
-            autoFocus
-            margin="dense"
-            id="addedDate"
-            label="Variant date (ex: 2023-01-01)"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={addedDate}
-            onChange={(e) => setAddedDate(e.target.value)}
-          />
-          <TextField
             select
             fullWidth
             variant="standard"
@@ -170,7 +164,8 @@ export default function AddVariant() {
                   key={productAttributeValue.id}
                   value={productAttributeValue.id}
                 >
-                  {productAttributeValue.productAttribute.name} - {productAttributeValue.value}
+                  {productAttributeValue.productAttribute.name} -{" "}
+                  {productAttributeValue.value}
                 </MenuItem>
               ))}
           </TextField>

@@ -30,11 +30,11 @@ export const createProductAttribute = async (
   const { subcategoryId } = req.params;
 
   try {
-    // if (!tkUser.isAdmin) {
-    //   return res
-    //     .status(401)
-    //     .json("You are not authorized to create product attributes!");
-    // }
+    if (!tkUser.isAdmin) {
+      return res
+        .status(401)
+        .json("You are not authorized to create product attributes!");
+    }
     const subcategory = await AppDataSource.getRepository(Subcategory).findOne({
       where: {
         id: subcategoryId,

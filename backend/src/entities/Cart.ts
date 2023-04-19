@@ -24,8 +24,6 @@ export default class Cart extends BaseEntity {
   @OneToMany(() => CartEntry, (cartEntry) => cartEntry.cart)
   cartEntries: CartEntry[];
 
-  // @OneToOne(() => Order, (order) => order.cart)
-  // order: Order;
   @OneToMany(() => Order, (order) => order.cart)
   orders: Order[];
 }

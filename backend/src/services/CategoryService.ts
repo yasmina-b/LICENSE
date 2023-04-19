@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import { AuthenticatedRequest } from "../middleware/verifyToken";
 import { AppDataSource } from "../data-source";
 import Category from "../entities/Category";
+import { Repository } from "typeorm";
+import Subcategory from "../entities/Subcategory";
+import Product from "../entities/Product";
 
 export const getAllCategories = async (req: Request, res: Response) => {
   try {
@@ -40,10 +43,10 @@ export const createCategory = async (
   const { name, imageURL, description } = req.body;
   const { tkUser } = req;
 
-  //   if (!tkUser.isAdmin)
-  //     return res
-  //       .status(401)
-  //       .json("You are not authenticaded to create a category");
+  if (!tkUser.isAdmin)
+    return res
+      .status(401)
+      .json("You are not authenticaded to create a category");
   try {
     const category = AppDataSource.getRepository(Category).create({
       name,
@@ -65,15 +68,16 @@ export const deleteCategory = async (
   const { tkUser } = req;
   const categoryId = req.params.id;
 
-  //   if (!tkUser.isAdmin) {
-  //     return res.status(401).json("You are not authorized to delete a category.");
-  //   }
+  // if (!tkUser.isAdmin) {
+  //   return res.status(401).json("You are not authorized to delete a category.");
+  // }
 
   try {
     const category = await AppDataSource.getRepository(Category).findOne({
       where: {
         id: categoryId,
       },
+      relations: ["subcategories"],
     });
 
     if (!category) {
@@ -81,6 +85,27 @@ export const deleteCategory = async (
     }
 
     await AppDataSource.getRepository(Category).remove(category);
+
+    // const categoryRepository = AppDataSource.getRepository(
+    //   Category
+    // ) as Repository<Category>;
+
+    // await categoryRepository.manager.transaction(async (manager) => {
+    //   // Delete all products associated with the subcategories of the category
+    //   for (const subcategory of category.subcategories) {
+    //     await manager.delete(Product, {
+    //       subcategory: subcategory,
+    //     });
+    //   }
+
+    //   // Delete all subcategories associated with the category
+    //   await manager.delete(Subcategory, {
+    //     category: category,
+    //   });
+
+    //   // Delete the category itself
+    //   await manager.delete(Category, category.id);
+    // });
 
     return res.status(204).send();
   } catch (error) {

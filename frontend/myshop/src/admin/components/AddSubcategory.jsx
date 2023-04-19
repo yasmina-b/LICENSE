@@ -9,6 +9,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
+import AuthContext from "../../context/AuthContext";
 
 export default function AddSubcategory() {
   const [open, setOpen] = React.useState(false);
@@ -18,6 +19,8 @@ export default function AddSubcategory() {
   const [subcategoryCreated, setSubcategoryCreated] = useState(false);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+
+  const { user } = React.useContext(AuthContext);
 
   const getCategories = async () => {
     try {
@@ -37,6 +40,11 @@ export default function AddSubcategory() {
           name,
           imageURL,
           description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
         }
       );
 

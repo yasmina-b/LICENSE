@@ -9,6 +9,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
+import AuthContext from "../../context/AuthContext";
 
 export default function AddAttributeValue() {
   const [open, setOpen] = React.useState(false);
@@ -16,6 +17,8 @@ export default function AddAttributeValue() {
   const [productAttributes, setProductAttributes] = useState("");
   const [attributeValueCreated, setAttributeValueCreated] = useState(false);
   const [selectedProductAttribute, setSelectedProductAttribute] = useState("");
+
+  const { user } = React.useContext(AuthContext);
 
   const getProductAttributes = async () => {
     try {
@@ -35,6 +38,11 @@ export default function AddAttributeValue() {
         `http://localhost:3001/admin/productAttributeValue/${productAttributeId}`,
         {
           value,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
         }
       );
 

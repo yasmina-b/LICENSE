@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import Cart from "./Cart";
+import Order from "./Order";
 import ProductVariant from "./ProductVariant";
 
 @Entity({ name: "cart_entry" })
@@ -28,4 +29,8 @@ export default class CartEntry extends BaseEntity {
 
   @OneToOne(() => ProductVariant, (productVariant) => productVariant.cartEntry)
   productVariant: ProductVariant;
+  entry: { id: string };
+
+  @ManyToOne(() => Order, (order) => order)
+  order: Order;
 }

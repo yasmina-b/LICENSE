@@ -9,6 +9,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
+import AuthContext from "../../context/AuthContext";
 
 export default function AddProductAttribute() {
   const [open, setOpen] = React.useState(false);
@@ -16,6 +17,8 @@ export default function AddProductAttribute() {
   const [subcategories, setSubcategories] = useState("");
   const [productAttributeCreated, setProductAttributeCreated] = useState(false);
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
+
+  const { user } = React.useContext(AuthContext);
 
   const getSubcategories = async () => {
     try {
@@ -33,6 +36,11 @@ export default function AddProductAttribute() {
         `http://localhost:3001/admin/productAttribute/${subcategoryId}`,
         {
           name,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
         }
       );
 

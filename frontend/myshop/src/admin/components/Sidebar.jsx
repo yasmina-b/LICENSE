@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import "../styles/Sidebar.css";
 import AddAttributeValues from "./AddAttributeValue";
 import AddCategory from "./AddCategory";
@@ -7,17 +8,32 @@ import AddSubcategory from "./AddSubcategory";
 import AddVariant from "./AddVariant";
 
 export default function Sidebar() {
+  const [activeTitle, setActiveTitle] = useState(null);
+
+  const handleTitleClick = (e, title) => {
+    e.preventDefault();
+    setActiveTitle(title);
+  };
   return (
     <div className="sidebar">
       <div className="sidebarWrapper">
         <div className="sidebarMenu">
           <h3 className="sidebarTitle-first">MENU</h3>
           <ul className="sidebarList">
-            <li className="sidebarTitle">USERS & USER ORDERS</li>
+            <li
+              className={
+                activeTitle === "users" ? "sidebarTitle active" : "sidebarTitle"
+              }
+              onClick={() => handleTitleClick("users")}
+            >
+              <a href="/admin">USERS & USER ORDERS</a>
+            </li>
           </ul>
         </div>
         <div className="sidebarMenu">
-          <h3 className="sidebarTitle">CATEGORIES & SUBCATEGORIES</h3>
+          <a href="/admin/categories">
+            <h3 className="sidebarTitle">CATEGORIES & SUBCATEGORIES</h3>
+          </a>
           <ul className="sidebarList">
             <li>
               <AddCategory />
@@ -28,44 +44,27 @@ export default function Sidebar() {
           </ul>
         </div>
         <div className="sidebarMenu">
-          <h3 className="sidebarTitle">PRODUCTS</h3>
+          <h3 className="sidebarTitle">PRODUCTS & PRODUCT CONFIGURATION</h3>
           <ul className="sidebarList">
-            {/* <li className="sidebarListItem">LIST OF PRODUCTS</li> */}
             <li>
               <AddProduct />
             </li>
-          </ul>
-        </div>
-        <div className="sidebarMenu">
-          <h3 className="sidebarTitle">PRODUCT ATTRIBUTE</h3>
-          <ul className="sidebarList">
-            <li>
-              <AddProductAttribute />
-            </li>
-          </ul>
-        </div>
-        <div className="sidebarMenu">
-          <h3 className="sidebarTitle">PRODUCT ATTRIBUTE VALUES</h3>
-          <ul className="sidebarList">
-            <li>
-              <AddAttributeValues />
-            </li>
-          </ul>
-        </div>
-        <div className="sidebarMenu">
-          <h3 className="sidebarTitle">PRODUCT CONFIGURATION</h3>
-          <ul className="sidebarList">
             <li>
               <AddVariant />
             </li>
           </ul>
         </div>
-        {/* <div className="sidebarMenu">
-          <h3 className="sidebarTitle">USER ORDERS</h3>
+        <div className="sidebarMenu">
+          <h3 className="sidebarTitle">PRODUCT ATTRIBUTE & ATTRIBUTE VALUES</h3>
           <ul className="sidebarList">
-            <li className="sidebarListItem">LIST OF ORDERS</li>
+            <li>
+              <AddProductAttribute />
+            </li>
+            <li>
+              <AddAttributeValues />
+            </li>
           </ul>
-        </div> */}
+        </div>
       </div>
     </div>
   );

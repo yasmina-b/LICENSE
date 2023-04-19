@@ -14,7 +14,7 @@ export const createOrder = async (req: Request, res: Response) => {
   const cartRepository = AppDataSource.getRepository(Cart);
   const cart = await cartRepository.findOne({
     where: { id: cartId },
-    relations: ["orders", "cartEntries"],
+    relations: ["orders", "cartEntries", "cartEntries.productVariant"],
   });
 
   const userRepository = AppDataSource.getRepository(User);
@@ -33,10 +33,14 @@ export const createOrder = async (req: Request, res: Response) => {
       city,
       postalCode,
       user: userId,
-      cart: cartId
+      cart: cart,
+      totalOrderSum: cart.totalSum,
+      orderDate: new Date(),
     });
 
     const result = await order.save();
+
+    cart.orders.push(order);
 
     const entries = cart.cartEntries.map((entry) => {
       entry.productVariant = null;
@@ -52,16 +56,14 @@ export const createOrder = async (req: Request, res: Response) => {
       .where("cartId = :cartId", { cartId: cart.id })
       .execute();
 
-    // Check if any rows were affected
     if (deleteResult.affected === 0) {
       throw new Error(`No cart entries found for cart with id ${cart.id}`);
     }
-
-    // Update cart with new totalSum and empty entries
     cart.totalSum = 0;
     cart.cartEntries = [];
     await cartRepository.save(cart);
 
+    await cartRepository.save(cart); // save the cart with updated orders array
 
     return res.json(result);
   } catch (error) {
@@ -70,8 +72,64 @@ export const createOrder = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const orderRepository = AppDataSource.getRepository(Order);
+    const orders = await orderRepository.find({
+      relations: ["user", "cartEntries"],
+    });
+    return res.json(orders);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
 
+export const getUserOrders = async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+
+  try {
+    const orders = await AppDataSource.getRepository(Order).find({
+      where: { user: { id: userId } },
+      relations: ["cart", "cartEntries"],
+    });
+
+    return res.json(orders);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+export const getOrder = async (req: Request, res: Response) => {
+  const orderId = req.params.orderId;
+  try {
+    const orderRepository = AppDataSource.getRepository(Order);
+    const order = await orderRepository.findOne({
+      where: { id: orderId },
+      relations: [
+        "cart",
+        "cart.cartEntries",
+        "cart.cartEntries.productVariant",
+      ],
+    });
+
+    if (!order) {
+      return res
+        .status(404)
+        .json({ message: `Order with id ${orderId} not found` });
+    }
+
+    return res.json(order);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
 
 module.exports = {
   createOrder,
+  getAllOrders,
+  getUserOrders,
+  getOrder,
 };

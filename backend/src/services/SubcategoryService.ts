@@ -121,11 +121,11 @@ export const createSubcategory = async (
   const { categoryId } = req.params;
 
   try {
-    // if (!tkUser.isAdmin) {
-    //   return res
-    //     .status(401)
-    //     .json("You are not authorized to create subcategories");
-    // }
+    if (!tkUser.isAdmin) {
+      return res
+        .status(401)
+        .json("You are not authorized to create subcategories");
+    }
     const category = await AppDataSource.getRepository(Category).findOne({
       where: {
         id: categoryId,

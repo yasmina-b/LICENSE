@@ -7,6 +7,10 @@ import {
 const router = express.Router();
 
 router.get("/productAttributes", getAllProductAttributes);
-router.post("/admin/productAttribute/:subcategoryId", createProductAttribute);
+router.post(
+  "/admin/productAttribute/:subcategoryId",
+  verifyToken,
+  createProductAttribute
+);
 
 module.exports = router;
