@@ -10,7 +10,7 @@ import {
 
 router.get("/categories", getAllCategories);
 router.get("/category/:categoryId", getCategoryByCategoryId);
-router.post("/admin/category", createCategory);
+router.post("/admin/category", verifyToken, createCategory);
 router.delete("/admin/category/:categoryId", deleteCategory);
 
 module.exports = router;

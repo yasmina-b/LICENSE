@@ -1,24 +1,23 @@
 import React from "react";
 import AdminNavbar from "../components/AdminNavbar";
+import CategoriesTabel from "../components/CategoriesTabel";
 import Sidebar from "../components/Sidebar";
-import UsersTabel from "../components/UsersTabel";
 import Widget from "../components/Widget";
 
-const AdminPage = () => {
+const AdminCategories = () => {
   return (
     <React.Fragment>
       <AdminNavbar />
       <Sidebar />
       <div className="widgets-position">
         <div className="widgets">
-          <Widget type="user" />
-          <Widget type="order" />
-          <Widget type="earning" />
+          <Widget type="categories" />
+          <Widget type="subcategories" />
         </div>
       </div>
-      <UsersTabel />
+      <CategoriesTabel />
     </React.Fragment>
   );
 };
 
-export default AdminPage;
+export default AdminCategories;

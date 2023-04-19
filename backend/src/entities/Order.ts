@@ -4,10 +4,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import Cart from "./Cart";
+import CartEntry from "./CartEntry";
 import User from "./User";
 
 @Entity({ name: "order" })
@@ -39,13 +41,16 @@ export default class Order extends BaseEntity {
   @Column({ nullable: true })
   orderDate: Date;
 
+  @Column({ nullable: true })
+  totalOrderSum: number;
+
   @ManyToOne(() => User, (user) => user, { eager: true })
   user: User;
 
-  // @OneToOne(() => Cart)
-  // @JoinColumn()
-  // cart: Cart;
-
   @ManyToOne(() => Cart, (cart) => cart, { eager: true })
   cart: Cart;
+
+  @OneToMany(() => CartEntry, (entry) => entry.order, { eager: true })
+  @JoinColumn()
+  cartEntries: CartEntry[];
 }

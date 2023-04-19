@@ -9,6 +9,7 @@ const router = express.Router();
 router.get("/productAttributeValues", getAllProductAttributeValues);
 router.post(
   "/admin/productAttributeValue/:productAttributeId",
+  verifyToken,
   createProductAttributeValue
 );
 

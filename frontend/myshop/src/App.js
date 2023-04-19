@@ -18,6 +18,7 @@ import ProductsCategoryPage from "./pages/ProductsCategoryPage";
 import ProductsPage from "./pages/ProductsPage";
 import RegisterPage from "./pages/RegisterPage";
 import WishlistPage from "./pages/WishlistPage";
+import AdminCategories from "./admin/pages/AdminCategories";
 
 function App() {
   const { user } = React.useContext(AuthContext);
@@ -153,8 +154,15 @@ function App() {
             </ProtectedRoute>
           }
         ></Route>
+        <Route
+          path="/admin/categories"
+          element={
+            <ProtectedRoute user={user} requiredRole="admin">
+              <AdminCategories />
+            </ProtectedRoute>
+          }
+        ></Route>
       </Routes>
-      
     </Router>
   );
 }

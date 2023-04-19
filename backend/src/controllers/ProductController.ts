@@ -25,7 +25,7 @@ router.get(
 );
 router.get("/products/:subcategoryId", getProductsBySubcategoryId);
 router.get("/productsCategory/:categoryId", getProductsByCategoryId);
-router.post("/admin/product/:subcategoryId", createProduct);
+router.post("/admin/product/:subcategoryId", verifyToken, createProduct);
 router.delete("/admin/product/:productId", deleteProduct);
 
 module.exports = router;

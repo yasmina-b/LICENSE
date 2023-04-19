@@ -22,6 +22,9 @@ router.get(
 );
 router.get("/productVariants", getAllProductVariants);
 router.get("/productVariantBySize", getProductVariantByProductAttributeValue);
-router.post("/admin/productVariant/:productId", createProductVariant);
+router.post(
+  "/admin/productVariant/:productId",
+  createProductVariant
+);
 
 module.exports = router;

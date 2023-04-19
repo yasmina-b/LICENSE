@@ -206,7 +206,7 @@ export const createProductVariant = async (
 
     const productVariant = AppDataSource.getRepository(ProductVariant).create({
       quantityInStock,
-      addedDate,
+      addedDate: new Date(),
       product,
     });
 

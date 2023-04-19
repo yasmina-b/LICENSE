@@ -4,7 +4,7 @@
   align-items: center;
   padding: 50px;
   height: 100vh;
-  margin-top: -280px;
+  margin-top: -300px;
   margin-left: 450px;
 }
 
@@ -12,6 +12,11 @@
   text-align: center;
   font-weight: 600;
   font-size: 27px;
-  margin-left: 50px;
-  margin-top: 70px;
+  margin-left: 450px;
+  margin-top: -40px;
+}
+
+.custom-datagrid {
+  color: black;
+  font-weight: 600 !important;
 }

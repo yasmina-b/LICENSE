@@ -1,0 +1,62 @@
+.widget {
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+  padding: 40px;
+  height: 70px;
+  width: 200px;
+  background-color: #d8d1d1;
+}
+
+.widgets {
+  display: flex;
+  padding: 50px;
+  gap: 30px;
+}
+
+.widgets-position {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 450px;
+  padding: 30px 30px;
+}
+
+.widget-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.widget-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.widget-title {
+  font-weight: bold;
+  font-size: 14px;
+  color: black
+}
+
+.widget-counter {
+  font-size: 23px;
+  font-weight: 500;
+  width: 100px;
+}
+
+.widget-link {
+  width: max-content;
+  font-size: 12px;
+  border-bottom: 1px solid gray;
+}
+
+.widget-icon {
+  font-size: 18px;
+  padding: 5px;
+  border-radius: 5px;
+  align-self: flex-end;
+  margin-top: -7px;
+  margin-right: 40px;
+}
