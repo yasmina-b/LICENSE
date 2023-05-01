@@ -9,8 +9,15 @@ const CheckoutPage = () => {
   const [cartEntries, setCartEntries] = useState([]);
   const [allProductVariants, setAllProductVariants] = useState([]);
   const [cartTotal, setCartTotal] = useState([]);
-  const { user } = React.useContext(AuthContext);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [postalCode, setPostalCode] = useState("");
 
+  const { user } = React.useContext(AuthContext);
   const cartId = user.user.cart.id;
 
   const getCartEntries = async () => {
@@ -42,6 +49,30 @@ const CheckoutPage = () => {
       return res.data;
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const placeOrder = async () => {
+    try {
+      const res = await axios.post("http://localhost:3001/order", {
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        address,
+        city,
+        postalCode,
+        cartEntries: cartEntries,
+        userId: user.user.id,
+        cartId: user.user.cart.id,
+      });
+
+      if (res.status === 200) {
+        alert("order placed successfully");
+        console.log(res.data);
+      }
+    } catch (err) {
+      console.log(err.response.data);
     }
   };
 
@@ -84,6 +115,8 @@ const CheckoutPage = () => {
               label="First Name"
               size="small"
               type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
             />
           </div>
           <div className="text-field-position">
@@ -93,6 +126,8 @@ const CheckoutPage = () => {
               label="Last Name"
               size="small"
               type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
             />
           </div>
           <div className="text-field-position">
@@ -102,6 +137,8 @@ const CheckoutPage = () => {
               label="Email"
               size="small"
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="text-field-position">
@@ -111,6 +148,8 @@ const CheckoutPage = () => {
               label="Phone Number"
               size="small"
               type="text"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
             />
           </div>
           <h3 className="checkout-left-title">ADDRESS</h3>
@@ -121,6 +160,8 @@ const CheckoutPage = () => {
               label="City"
               size="small"
               type="text"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
             />
           </div>
           <div className="text-field-position">
@@ -130,6 +171,8 @@ const CheckoutPage = () => {
               label="Address"
               size="small"
               type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
             />
           </div>
           <div className="text-field-position">
@@ -139,32 +182,39 @@ const CheckoutPage = () => {
               label="Postal Code"
               size="small"
               type="text"
+              value={postalCode}
+              onChange={(e) => setPostalCode(e.target.value)}
             />
           </div>
-          <h3 className="checkout-left-title">PAYMENT</h3>
         </div>
         <div className="checkout-right">
           <h3 className="checkout-left-title">YOUR SHOPPING BAG</h3>
           {allProductVariants &&
             allProductVariants.map((item, index) => (
-              <>
-                <div className="checkout-product-details" key={item.index}>
+              <div key={item.product.id}>
+                <div className="checkout-product-details">
                   <img
                     className="checkout-orders-image"
                     src={item.product.firstImageURL}
                     alt=""
                   />
-                  <h3>{item.product.name} size {item.productAttributeValues[0].value} X {item.cartEntry.quantityInCart}</h3>
+                  <h3>
+                    {item.product.name} size{" "}
+                    {item.productAttributeValues[0].value} X{" "}
+                    {item.cartEntry.quantityInCart}
+                  </h3>
                   <h3>RON {item.cartEntry.totalPriceEntry}</h3>
                 </div>
-              </>
+              </div>
             ))}
           <div className="total-checkout-container">
             <h3 className="cart-total">TOTAL</h3>
             <h3 className="cart-total">{cartTotal.totalSum}.00</h3>
           </div>
 
-          <button className="order-now-button">ORDER NOW</button>
+          <button className="order-now-button" onClick={placeOrder}>
+            ORDER NOW
+          </button>
         </div>
       </div>
     </React.Fragment>

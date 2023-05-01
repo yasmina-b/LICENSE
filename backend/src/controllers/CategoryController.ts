@@ -11,6 +11,6 @@ import {
 router.get("/categories", getAllCategories);
 router.get("/category/:categoryId", getCategoryByCategoryId);
 router.post("/admin/category", verifyToken, createCategory);
-router.delete("/admin/category/:categoryId", deleteCategory);
+router.delete("/admin/category/:categoryId", verifyToken, deleteCategory);
 
 module.exports = router;

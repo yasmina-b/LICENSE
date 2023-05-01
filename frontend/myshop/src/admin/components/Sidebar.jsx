@@ -44,7 +44,9 @@ export default function Sidebar() {
           </ul>
         </div>
         <div className="sidebarMenu">
-          <h3 className="sidebarTitle">PRODUCTS & PRODUCT CONFIGURATION</h3>
+          <a href="/admin/products">
+            <h3 className="sidebarTitle">PRODUCTS & PRODUCT CONFIGURATION</h3>
+          </a>
           <ul className="sidebarList">
             <li>
               <AddProduct />
@@ -52,11 +54,6 @@ export default function Sidebar() {
             <li>
               <AddVariant />
             </li>
-          </ul>
-        </div>
-        <div className="sidebarMenu">
-          <h3 className="sidebarTitle">PRODUCT ATTRIBUTE & ATTRIBUTE VALUES</h3>
-          <ul className="sidebarList">
             <li>
               <AddProductAttribute />
             </li>

@@ -7,7 +7,7 @@ import Subcategory from "../entities/Subcategory";
 export const getAllSubcategories = async (req: Request, res: Response) => {
   try {
     const subcategories = await AppDataSource.getRepository(Subcategory).find({
-      relations: ["category", "products", "productAttributes"],
+      relations: ["category", "products", "productAttributes", "productAttributes.productAttributeValues"],
       order: {
         name: "ASC",
       },
@@ -170,11 +170,11 @@ export const deleteSubcategory = async (
       return res.status(404).json({ message: "Subcategory not found." });
     }
 
-    // if (!tkUser.isAdmin) {
-    //   return res.status(401).json({
-    //     message: "You are not authorized to delete this subcategory.",
-    //   });
-    // }
+    if (!tkUser.isAdmin) {
+      return res.status(401).json({
+        message: "You are not authorized to delete this subcategory.",
+      });
+    }
 
     await AppDataSource.getRepository(Subcategory).remove(subcategory);
 

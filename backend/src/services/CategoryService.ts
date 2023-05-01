@@ -65,14 +65,14 @@ export const deleteCategory = async (
   req: AuthenticatedRequest,
   res: Response
 ) => {
+  const { categoryId } = req.params;
   const { tkUser } = req;
-  const categoryId = req.params.id;
-
-  // if (!tkUser.isAdmin) {
-  //   return res.status(401).json("You are not authorized to delete a category.");
-  // }
 
   try {
+    if (!tkUser.isAdmin) {
+      return res.status(401).json("You are not authorized to delete categories");
+    }
+
     const category = await AppDataSource.getRepository(Category).findOne({
       where: {
         id: categoryId,
@@ -81,33 +81,17 @@ export const deleteCategory = async (
     });
 
     if (!category) {
-      return res.status(404).json(`Category with id ${categoryId} not found.`);
+      return res
+        .status(404)
+        .json(`Product with id ${categoryId} does not exist`);
     }
 
+    await AppDataSource.getRepository(Subcategory).remove(
+      category.subcategories
+    );
     await AppDataSource.getRepository(Category).remove(category);
 
-    // const categoryRepository = AppDataSource.getRepository(
-    //   Category
-    // ) as Repository<Category>;
-
-    // await categoryRepository.manager.transaction(async (manager) => {
-    //   // Delete all products associated with the subcategories of the category
-    //   for (const subcategory of category.subcategories) {
-    //     await manager.delete(Product, {
-    //       subcategory: subcategory,
-    //     });
-    //   }
-
-    //   // Delete all subcategories associated with the category
-    //   await manager.delete(Subcategory, {
-    //     category: category,
-    //   });
-
-    //   // Delete the category itself
-    //   await manager.delete(Category, category.id);
-    // });
-
-    return res.status(204).send();
+    return res.json("Category deleted successfully");
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);

@@ -24,7 +24,6 @@ export default function CategoriesTabel() {
 
   const deleteCategory = async (categoryId) => {
     try {
-      console.log(categoryId);
       const response = await axios.delete(
         `http://localhost:3001/admin/category/${categoryId}`,
         {
@@ -33,6 +32,35 @@ export default function CategoriesTabel() {
           },
         }
       );
+      setCategories((prevCategory) =>
+        prevCategory.filter((category) => category.id !== categoryId)
+      );
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
+  const deleteSubcategory = async (subcategoryId, categoryId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3001/admin/subcategory/${subcategoryId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      setCategories((prevCategories) => {
+        return prevCategories.map((category) => {
+          if (category.id === categoryId) {
+            const updatedSubcategories = category.subcategories.filter(
+              (subcategory) => subcategory.id !== subcategoryId
+            );
+            return { ...category, subcategories: updatedSubcategories };
+          }
+          return category;
+        });
+      });
     } catch (err) {
       console.log(err.response.data);
     }
@@ -60,7 +88,15 @@ export default function CategoriesTabel() {
         renderCell: (params) => (
           <div>
             {params.row.subcategories.map((subcategory) => (
-              <div key={subcategory.id}>{subcategory.name}</div>
+              <div key={subcategory.id}>
+                {subcategory.name}{" "}
+                <Delete
+                  sx={{ fontSize: "15px" }}
+                  color="black"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => deleteSubcategory(subcategory.id, params.row.id)}
+                />
+              </div>
             ))}
           </div>
         ),

@@ -8,11 +8,14 @@ import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import AuthContext from "../../context/AuthContext";
 import ClassOutlinedIcon from "@mui/icons-material/ClassOutlined";
 
-const Widget = ({ type }) => {
+const Widget = ({ type, handleClick }) => {
   const { user } = React.useContext(AuthContext);
   const [users, setUsers] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
+  const [earnings, setEarnings] = useState("");
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -36,6 +39,25 @@ const Widget = ({ type }) => {
     getUsers();
   }, [user]);
 
+  useEffect(() => {
+    const getOrders = async () => {
+      try {
+        if (user?.token) {
+          const response = await axios.get("http://localhost:3001/orders", {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          });
+          setOrders(response.data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    getOrders();
+  }, [user]);
+
   const getCategories = async () => {
     try {
       const response = await axios.get("http://localhost:3001/categories");
@@ -54,9 +76,35 @@ const Widget = ({ type }) => {
     }
   };
 
+  const getProducts = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3001/products`);
+      setProducts(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getEarnings = async () => {
+    try {
+      if (user?.token) {
+        const response = await axios.get("http://localhost:3001/earnings", {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+        setEarnings(response.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     getCategories();
     getSubcategories();
+    getEarnings();
+    getProducts();
   }, []);
 
   let data;
@@ -74,13 +122,14 @@ const Widget = ({ type }) => {
       data = {
         title: "ORDERS",
         link: "View all orders",
-        amount: 200,
+        amount: orders.length,
         icon: <ShoppingCartOutlinedIcon className="widget-icon" />,
       };
       break;
     case "earning":
       data = {
         title: "EARNINGS",
+        amount: earnings,
         isMoney: true,
         icon: <MonetizationOnOutlinedIcon className="widget-icon" />,
       };
@@ -99,12 +148,19 @@ const Widget = ({ type }) => {
         icon: <ClassOutlinedIcon className="widget-icon" />,
       };
       break;
+      case "products":
+        data = {
+          title: "PRODUCTS",
+          amount: products.length,
+          icon: <ClassOutlinedIcon className="widget-icon" />,
+        };
+        break;
     default:
       break;
   }
 
   return (
-    <div className="widget">
+    <div className="widget" onClick={handleClick}>
       <div className="widget-left">
         <span className="widget-title">{data.title}</span>
         <span className="widget-counter">

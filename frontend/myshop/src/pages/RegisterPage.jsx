@@ -9,6 +9,7 @@ const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setCofirmPassword] = useState("");
 
@@ -65,6 +66,16 @@ const RegisterPage = () => {
           variant="standard"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
+        />
+      </div>
+      <div className="register-container">
+        <TextField
+          sx={{ width: 500 }}
+          id="standard-basic"
+          label="Phone number"
+          variant="standard"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
         />
       </div>
       <div className="register-container">

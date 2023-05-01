@@ -6,6 +6,7 @@ import Product from "../entities/Product";
 import ProductAttributeValue from "../entities/ProductAttributeValue";
 import Category from "../entities/Category";
 import { Not } from "typeorm";
+import ProductVariant from "../entities/ProductVariant";
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
@@ -223,14 +224,15 @@ export const deleteProduct = async (
   const { tkUser } = req;
 
   try {
-    // if (!tkUser.isAdmin) {
-    //   return res.status(401).json("You are not authorized to delete products");
-    // }
+    if (!tkUser.isAdmin) {
+      return res.status(401).json("You are not authorized to delete products");
+    }
 
     const product = await AppDataSource.getRepository(Product).findOne({
       where: {
         id: productId,
       },
+      relations: ["productVariants"],
     });
 
     if (!product) {
@@ -239,7 +241,8 @@ export const deleteProduct = async (
         .json(`Product with id ${productId} does not exist`);
     }
 
-    await AppDataSource.getRepository(Product).delete(productId);
+    await AppDataSource.getRepository(ProductVariant).remove(product.productVariants);
+    await AppDataSource.getRepository(Product).remove(product);
 
     return res.json("Product deleted successfully");
   } catch (error) {

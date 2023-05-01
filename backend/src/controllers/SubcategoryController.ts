@@ -17,6 +17,10 @@ router.get("/subcategoriesLast", getSubcategoriesOfLastCategoryId);
 router.get("/subcategories/:categoryId", getSubcategoriesByCategoryId);
 router.get("/subcategory/:subcategoryId", getSubcategoryBySubcategoryId);
 router.post("/admin/subcategory/:categoryId", verifyToken, createSubcategory);
-router.delete("/admin/subcategory/:subcategoryId", deleteSubcategory);
+router.delete(
+  "/admin/subcategory/:subcategoryId",
+  verifyToken,
+  deleteSubcategory
+);
 
 module.exports = router;
