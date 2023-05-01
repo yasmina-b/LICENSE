@@ -21,6 +21,8 @@ export default class Category extends BaseEntity {
   @Column()
   description: string;
 
-  @OneToMany(() => Subcategory, (subcategory) => subcategory.category)
+  @OneToMany(() => Subcategory, (subcategory) => subcategory.category, {
+    cascade: true,
+  })
   subcategories: Subcategory[];
 }

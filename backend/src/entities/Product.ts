@@ -37,6 +37,8 @@ export default class Product extends BaseEntity {
   })
   subcategory: Subcategory;
 
-  @OneToMany(() => ProductVariant, (productVariant) => productVariant.product)
+  @OneToMany(() => ProductVariant, (productVariant) => productVariant.product, {
+    cascade: true,
+  })
   productVariants: ProductVariant[];
 }

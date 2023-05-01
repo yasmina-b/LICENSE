@@ -27,7 +27,7 @@ export const updateUserDetails = async (
   res: Response
 ) => {
   const { tkUser } = req;
-  const { email, firstName, lastName } = req.body;
+  const { firstName, lastName, phoneNumber } = req.body;
   const userId = req.params.id;
 
   // Check if user is authorized to update account information
@@ -42,9 +42,9 @@ export const updateUserDetails = async (
       where: { id: userId },
     });
     if (user !== null) {
-      user.email = email;
       user.firstName = firstName;
       user.lastName = lastName;
+      user.phoneNumber = phoneNumber;
       await AppDataSource.getRepository(User).save(user);
     } else {
       return res.status(500).json("Error: user is null!");

@@ -34,6 +34,7 @@ const CartPage = () => {
           (variant) => variant.cartEntry.id !== cartEntryId
         );
         setAllProductVariants(newProductVariants);
+        setCartTotal(0);
       }
     } catch (err) {
       console.error(err);
@@ -136,12 +137,12 @@ const CartPage = () => {
                   {item.product.name} : {item.productAttributeValues[0].value} X{" "}
                   {item.cartEntry.quantityInCart}
                 </div>
-                <div>RON {item.cartEntry.totalPriceEntry}.00</div>
+                <div>RON {item.cartEntry.totalPriceEntry}</div>
               </div>
             ))}
           <div className="cart-summary-item">
             <div className="cart-total">TOTAL : </div>
-            <div className="cart-total-price">RON {cartTotal.totalSum}.00</div>
+            <div className="cart-total-price">RON {cartTotal.totalSum}</div>
           </div>
           <a href="/checkout">
             <button className="cart-summary-button">PROCEED TO CHECKOUT</button>

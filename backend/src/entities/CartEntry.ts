@@ -31,6 +31,6 @@ export default class CartEntry extends BaseEntity {
   productVariant: ProductVariant;
   entry: { id: string };
 
-  @ManyToOne(() => Order, (order) => order)
+  @ManyToOne(() => Order, (order) => order, { eager: true })
   order: Order;
 }

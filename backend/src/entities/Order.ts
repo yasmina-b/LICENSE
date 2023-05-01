@@ -50,7 +50,7 @@ export default class Order extends BaseEntity {
   @ManyToOne(() => Cart, (cart) => cart, { eager: true })
   cart: Cart;
 
-  @OneToMany(() => CartEntry, (entry) => entry.order, { eager: true })
+  @OneToMany(() => CartEntry, (entry) => entry.order, {cascade: true})
   @JoinColumn()
   cartEntries: CartEntry[];
 }

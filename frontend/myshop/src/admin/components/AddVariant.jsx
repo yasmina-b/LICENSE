@@ -13,7 +13,7 @@ import AuthContext from "../../context/AuthContext";
 
 export default function AddVariant() {
   const [open, setOpen] = React.useState(false);
-  const [quantity, setQuantity] = useState("");
+  const [quantityInStock, setQuantityInStock] = useState("");
   const [variantCreated, setVariantCreated] = useState(false);
   const [products, setProducts] = useState([]);
   const [productAttributeValues, setProductAttributeValues] = useState([]);
@@ -48,7 +48,7 @@ export default function AddVariant() {
       const res = await axios.post(
         `http://localhost:3001/admin/productVariant/${productId}`,
         {
-          quantity,
+          quantityInStock,
         },
         {
           headers: {
@@ -77,7 +77,7 @@ export default function AddVariant() {
   };
 
   const handleClose = () => {
-    setQuantity("");
+    setQuantityInStock("");
     setSelectedProduct("");
     setSelectedAttributeValue("");
     setOpen(false);
@@ -131,8 +131,8 @@ export default function AddVariant() {
             type="text"
             fullWidth
             variant="standard"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            value={quantityInStock}
+            onChange={(e) => setQuantityInStock(e.target.value)}
           />
           <TextField
             select

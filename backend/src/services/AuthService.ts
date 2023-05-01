@@ -7,7 +7,8 @@ import { AppDataSource } from "../data-source";
 import Cart from "../entities/Cart";
 
 export const register = async (req: Request, res: Response) => {
-  const { email, firstName, lastName, password, confirmPassword } = req.body;
+  const { email, firstName, lastName, phoneNumber, password, confirmPassword } =
+    req.body;
 
   let errors: any = {};
 
@@ -42,6 +43,7 @@ export const register = async (req: Request, res: Response) => {
       email,
       firstName,
       lastName,
+      phoneNumber,
       password,
     });
 

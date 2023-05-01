@@ -32,7 +32,11 @@
 .sidebarList {
   list-style: none;
   padding: 5px;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+}
+
+.sidebarList li{
+  margin-bottom: 10px;
 }
 
 .sidebarListItem {

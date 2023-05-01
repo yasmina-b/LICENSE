@@ -31,7 +31,7 @@ export default class User extends BaseEntity {
   @Column()
   lastName: string;
 
-  @Column({ nullable: true })
+  @Column()
   phoneNumber: string;
 
   @Length(6, 24, { message: "Must be at least 6 characters long" })

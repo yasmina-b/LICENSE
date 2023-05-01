@@ -15,6 +15,10 @@ export const createCart = async (req: Request, res: Response) => {
       relations: ["product"],
     });
 
+    if (variant.quantityInStock <= 0) {
+      return res.status(400).json({ message: "Selected product is out of stock" });
+    }
+
     const existingCartEntry = await AppDataSource.getRepository(
       CartEntry
     ).findOne({
