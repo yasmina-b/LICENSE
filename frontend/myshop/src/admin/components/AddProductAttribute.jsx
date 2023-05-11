@@ -32,21 +32,23 @@ export default function AddProductAttribute() {
   const createProductAttribute = async (e, subcategoryId) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        `http://localhost:3001/admin/productAttribute/${subcategoryId}`,
-        {
-          name,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
+      if (user?.token) {
+        const res = await axios.post(
+          `http://localhost:3001/admin/productAttribute/${subcategoryId}`,
+          {
+            name,
           },
-        }
-      );
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
 
-      if (res.status === 200) {
-        console.log(res.data);
-        setProductAttributeCreated(true);
+        if (res.status === 200) {
+          console.log(res.data);
+          setProductAttributeCreated(true);
+        }
       }
     } catch (err) {
       console.log(err.response.data);

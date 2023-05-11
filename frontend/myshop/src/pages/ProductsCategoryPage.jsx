@@ -19,6 +19,8 @@ const ProductsCategoryPage = () => {
   const [productsOfCategory, setProductsOfCategory] = useState([]);
   const [category, setCategory] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortedProducts, setSortedProducts] = useState([]);
 
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
@@ -92,9 +94,25 @@ const ProductsCategoryPage = () => {
     getCategoryByCategoryId();
   }, []);
 
-  const filteredProducts = productsOfCategory.filter((product) => {
-    return product.name.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+  useEffect(() => {
+    const filtered = productsOfCategory.filter((product) => {
+      return product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+
+    const sorted = filtered.sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.price - b.price;
+      } else {
+        return b.price - a.price;
+      }
+    });
+
+    setSortedProducts(sorted);
+  }, [sortOrder, productsOfCategory, searchTerm]);
+
+  const handleSortOrderChange = (e) => {
+    setSortOrder(e.target.value);
+  };
 
   return (
     <React.Fragment>
@@ -113,6 +131,20 @@ const ProductsCategoryPage = () => {
       <ProductsPromo />
       <nav className="navbar">
         <div className="navbar-items">
+          <div className="navbar-item">
+            <label htmlFor="sort-order-select" className="price-select-label">
+              SORT BY PRICE:{" "}
+            </label>
+            <select
+              id="sort-order-select"
+              className="price-select"
+              value={sortOrder}
+              onChange={handleSortOrderChange}
+            >
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </div>
           <div className="navbar-item">
             <input
               className="input-with-icons"
@@ -143,7 +175,7 @@ const ProductsCategoryPage = () => {
       <div className="products-page">
         <div className="right-part">
           <div className="products-list">
-            {filteredProducts.map((product) => (
+            {sortedProducts.map((product) => (
               <React.Fragment key={product.id}>
                 <div onClick={() => navigate(`/productVariants/${product.id}`)}>
                   <Card item={product} />

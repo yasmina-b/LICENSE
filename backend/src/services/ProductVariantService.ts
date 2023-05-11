@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import Product from "../entities/Product";
 import ProductVariant from "../entities/ProductVariant";
 import ProductAttributeValue from "../entities/ProductAttributeValue";
+import Subcategory from "../entities/Subcategory";
 
 export const getProductVariantsByProductId = async (
   req: Request,
@@ -53,34 +54,6 @@ export const getProductAttributeValuesByProductVariantId = async (
     return res.status(500).json(error);
   }
 };
-
-// export const getProductVariantByProductAttributeValue = async (
-//   req: Request,
-//   res: Response
-// ) => {
-//   const { productId, productAttributeValueId } = req.body;
-
-//   try {
-//     const productVariant = await AppDataSource.getRepository(ProductVariant)
-//       .createQueryBuilder("pv")
-//       .leftJoin("pv.product", "p")
-//       .leftJoin("pv.productAttributeValues", "pav")
-//       .where("p.id = :productId", { productId })
-//       .andWhere("pav.id = :productAttributeValueId", {
-//         productAttributeValueId,
-//       })
-//       .getOne();
-
-//     if (!productVariant) {
-//       return res.status(404).json({ message: "ProductVariant not found" });
-//     }
-
-//     return res.json(productVariant);
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json(error);
-//   }
-// };
 
 export const getProductVariantByProductAttributeValue = async (
   req: Request,
@@ -142,6 +115,48 @@ export const getProductVariantByProductVariantId = async (
     });
 
     return res.json(productVariant);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+export const getProductVariantsByProductAttributeValue = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const subcategoryId = req.params.subcategoryId;
+    const productAttributeValueId = req.query.productAttributeValueId;
+
+    const subcategoryRepository = AppDataSource.getRepository(Subcategory);
+    const subcategory = await subcategoryRepository.findOne({
+      where: { id: subcategoryId },
+      relations: [
+        "productAttributes",
+        "productAttributes.productAttributeValues",
+        "products",
+        "products.productVariants",
+        "products.productVariants.productAttributeValues",
+      ],
+    });
+
+    const productVariants = subcategory.products.reduce(
+      (acc: ProductVariant[], product: Product) => {
+        return acc.concat(product.productVariants);
+      },
+      []
+    );
+
+    const productVariantsWithAttribute = productVariants
+      .filter((variant) =>
+        variant.productAttributeValues.some(
+          (value) => value.id === productAttributeValueId
+        )
+      )
+      .filter((variant) => variant.quantityInStock > 0);
+
+    return res.json(productVariantsWithAttribute);
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
@@ -223,11 +238,46 @@ export const createProductVariant = async (
   }
 };
 
+export const updateProductVariant = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  const { quantityInStock } = req.body;
+  const { productVariantId } = req.params;
+
+  try {
+    const productVariant = await AppDataSource.getRepository(
+      ProductVariant
+    ).findOne({
+      where: {
+        id: productVariantId,
+      },
+    });
+
+    if (!productVariant) {
+      return res
+        .status(400)
+        .json(`Product variant with id ${productVariantId} does not exist`);
+    }
+
+    productVariant.quantityInStock = quantityInStock;
+
+    await AppDataSource.getRepository(ProductVariant).save(productVariant);
+
+    return res.json(productVariant);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
 module.exports = {
   getProductVariantsByProductId,
   getAllProductVariants,
   getProductVariantByProductVariantId,
   getProductAttributeValuesByProductVariantId,
   getProductVariantByProductAttributeValue,
+  getProductVariantsByProductAttributeValue,
   createProductVariant,
+  updateProductVariant,
 };

@@ -7,7 +7,12 @@ import Subcategory from "../entities/Subcategory";
 export const getAllSubcategories = async (req: Request, res: Response) => {
   try {
     const subcategories = await AppDataSource.getRepository(Subcategory).find({
-      relations: ["category", "products", "productAttributes", "productAttributes.productAttributeValues"],
+      relations: [
+        "category",
+        "products",
+        "productAttributes",
+        "productAttributes.productAttributeValues",
+      ],
       order: {
         name: "ASC",
       },
@@ -28,6 +33,11 @@ export const getSubcategoryBySubcategoryId = async (
 
     const subcategory = await AppDataSource.getRepository(Subcategory).find({
       where: { id: subcategoryId },
+      relations: [
+        "products.productVariants",
+        "productAttributes",
+        "productAttributes.productAttributeValues",
+      ],
     });
 
     return res.json(subcategory);

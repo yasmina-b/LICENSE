@@ -17,9 +17,9 @@ import ProductDetail from "./pages/ProductDetail";
 import ProductsCategoryPage from "./pages/ProductsCategoryPage";
 import ProductsPage from "./pages/ProductsPage";
 import RegisterPage from "./pages/RegisterPage";
-import WishlistPage from "./pages/WishlistPage";
 import AdminCategories from "./admin/pages/AdminCategories";
 import AdminProducts from "./admin/pages/AdminProducts";
+import OrderConfirmationPage from "./pages/OrderConfirmationPage";
 
 function App() {
   const { user } = React.useContext(AuthContext);
@@ -112,13 +112,13 @@ function App() {
           }
         />
         <Route
-          path="/wishlist"
+          path="/confirmation"
           element={
             <>
               <Promo />
               <Accountbar />
               <Shopbar />
-              <WishlistPage />
+              <OrderConfirmationPage />
               <Footer />
             </>
           }

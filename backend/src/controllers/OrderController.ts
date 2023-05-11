@@ -3,6 +3,7 @@ import {
   createOrder,
   deleteOrder,
   getAllOrders,
+  getMostBoughtProductVariant,
   getOrder,
   getTotalEarnings,
   getUserOrders,
@@ -16,5 +17,6 @@ router.get("/orders/:userId", getUserOrders);
 router.get("/order/:orderId", getOrder);
 router.get("/earnings", verifyToken, getTotalEarnings);
 router.delete("/admin/order/:orderId", verifyToken, deleteOrder);
+router.get("/mostBought", verifyToken, getMostBoughtProductVariant);
 
 module.exports = router;

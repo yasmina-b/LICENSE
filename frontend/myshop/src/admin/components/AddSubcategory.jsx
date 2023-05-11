@@ -34,23 +34,25 @@ export default function AddSubcategory() {
   const createSubcategory = async (e, categoryId) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        `http://localhost:3001/admin/subcategory/${categoryId}`,
-        {
-          name,
-          imageURL,
-          description,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
+      if (user?.token) {
+        const res = await axios.post(
+          `http://localhost:3001/admin/subcategory/${categoryId}`,
+          {
+            name,
+            imageURL,
+            description,
           },
-        }
-      );
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
 
-      if (res.status === 200) {
-        console.log(res.data);
-        setSubcategoryCreated(true);
+        if (res.status === 200) {
+          console.log(res.data);
+          setSubcategoryCreated(true);
+        }
       }
     } catch (err) {
       console.log(err.response.data);

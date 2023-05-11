@@ -79,7 +79,7 @@ export default function UsersTabel() {
       <div className="tabel-title">ALL USERS</div>
       <div className="table-position">
         <div style={{ marginTop: "50px" }}>
-          <Box sx={{ height: 210 }}>
+          <Box sx={{ height: "350px", width: 900 }}>
             <DataGrid
               className="custom-datagrid"
               columns={columns}

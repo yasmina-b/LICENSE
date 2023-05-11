@@ -4,6 +4,7 @@ import "../styles/Checkout.css";
 import TextField from "@mui/material/TextField";
 import AuthContext from "../context/AuthContext";
 import ProductsPromo from "../components/ProductsPromo";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutPage = () => {
   const [cartEntries, setCartEntries] = useState([]);
@@ -19,6 +20,7 @@ const CheckoutPage = () => {
 
   const { user } = React.useContext(AuthContext);
   const cartId = user.user.cart.id;
+  const navigate = useNavigate();
 
   const getCartEntries = async () => {
     try {
@@ -68,7 +70,7 @@ const CheckoutPage = () => {
       });
 
       if (res.status === 200) {
-        alert("order placed successfully");
+        navigate('/confirmation');
         console.log(res.data);
       }
     } catch (err) {

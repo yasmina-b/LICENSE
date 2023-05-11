@@ -90,65 +90,83 @@ const CartPage = () => {
 
   return (
     <React.Fragment>
-      <ProductsPromo />
-      <div className="cart-wrapper">
-        {allProductVariants &&
-          allProductVariants.map((item, index) => (
-            <div className="cart-bottom" key={index}>
-              <div className="cart-info">
-                <div className="cart-product">
-                  <div className="cart-details">
-                    <img
-                      className="cart-product-image"
-                      src={item.product.firstImageURL}
-                      alt=""
-                    ></img>
-                    <div className="cart-product-details">
-                      <span className="cart-product-name">
-                        {item.product.name}
-                      </span>
-                      <span className="cart-product-description">
-                        {item.product.description}
-                      </span>
-                      <span>Size: {item.productAttributeValues[0].value}</span>
-                      <span>Quantity: {item.cartEntry.quantityInCart}</span>
-                      <span className="cart-product-name">
-                        Total RON : {item.cartEntry.totalPriceEntry}
-                      </span>
-                    </div>
-                    <div className="cart-amount-details">
-                      <X
-                        className="cart-close-button"
-                        onClick={() => deleteCartEntry(item.cartEntry.id)}
-                      />
+      {cartEntries.length === 0 ? (
+        <div>
+          <h2 className="empty-cart-title">YOUR SHOPPING BAG IS EMPTY...</h2>
+          <div className="empty-cart-button-position">
+            <a href="/">
+              <button className="empty-cart-button">CONTINUE SHOPPING</button>
+            </a>
+          </div>
+        </div>
+      ) : (
+        <React.Fragment>
+          <ProductsPromo />
+          <div className="cart-wrapper">
+            {allProductVariants &&
+              allProductVariants.map((item, index) => (
+                <div className="cart-bottom" key={index}>
+                  <div className="cart-info">
+                    <div className="cart-product">
+                      <div className="cart-details">
+                        <img
+                          className="cart-product-image"
+                          src={item.product.firstImageURL}
+                          alt=""
+                        ></img>
+                        <div className="cart-product-details">
+                          <span className="cart-product-name">
+                            {item.product.name}
+                          </span>
+                          <span className="cart-product-description">
+                            {item.product.description}
+                          </span>
+                          <span className="cart-size-quantity">
+                            SIZE: {item.productAttributeValues[0].value}
+                          </span>
+                          <span className="cart-size-quantity">QUANTITY: {item.cartEntry.quantityInCart}</span>
+                          <span className="cart-product-name">
+                            Total RON : {item.cartEntry.totalPriceEntry}
+                          </span>
+                        </div>
+                        <div className="cart-amount-details">
+                          <X
+                            className="cart-close-button"
+                            onClick={() => deleteCartEntry(item.cartEntry.id)}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              ))}
 
-        <div className="cart-summary">
-          <div className="cart-summary-title">ORDER SUMMARY</div>
-          {allProductVariants &&
-            allProductVariants.map((item, index) => (
-              <div className="cart-summary-item" key={index}>
-                <div>
-                  {item.product.name} : {item.productAttributeValues[0].value} X{" "}
-                  {item.cartEntry.quantityInCart}
-                </div>
-                <div>RON {item.cartEntry.totalPriceEntry}</div>
+            <div className="cart-summary">
+              <div className="cart-summary-title">ORDER SUMMARY</div>
+              {allProductVariants &&
+                allProductVariants.map((item, index) => (
+                  <div className="cart-summary-item" key={index}>
+                    <div>
+                      {item.product.name} :{" "}
+                      {item.productAttributeValues[0].value} X{" "}
+                      {item.cartEntry.quantityInCart}
+                    </div>
+                    <div>RON {item.cartEntry.totalPriceEntry}</div>
+                  </div>
+                ))}
+              <div className="cart-summary-item">
+                <div className="cart-total">TOTAL : </div>
+                <div className="cart-total-price">RON {cartTotal.totalSum}</div>
               </div>
-            ))}
-          <div className="cart-summary-item">
-            <div className="cart-total">TOTAL : </div>
-            <div className="cart-total-price">RON {cartTotal.totalSum}</div>
+              <a href="/checkout">
+                <button className="cart-summary-button">
+                  PROCEED TO CHECKOUT
+                </button>
+              </a>
+            </div>
           </div>
-          <a href="/checkout">
-            <button className="cart-summary-button">PROCEED TO CHECKOUT</button>
-          </a>
-        </div>
-      </div>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };

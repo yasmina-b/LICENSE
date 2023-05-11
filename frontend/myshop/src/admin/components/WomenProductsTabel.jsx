@@ -6,23 +6,22 @@ import { Box } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { DataGrid } from "@mui/x-data-grid";
 
-export default function ProductsTabel() {
+export default function WomenProductsTabel() {
   const { user } = React.useContext(AuthContext);
-  const [products, setProducts] = useState([]);
+  const [productsWomen, setProductsWomen] = useState([]);
   const [pageSize, setPageSize] = useState(10);
   const [activeRowId, setActiveRowId] = useState(null);
 
-  useEffect(() => {
-    const getProducts = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/products");
-        setProducts(response.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    getProducts();
-  }, [user]);
+  const getProductsOfCategoryWomen = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3001/productsCategory/215fbeb7-cc2f-440e-957e-62d7be3a96c6"
+      );
+      setProductsWomen(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const deleteProduct = async (productId) => {
     try {
@@ -34,13 +33,18 @@ export default function ProductsTabel() {
           },
         }
       );
-      setProducts((prevProducts) =>
+
+      setProductsWomen((prevProducts) =>
         prevProducts.filter((product) => product.id !== productId)
       );
     } catch (err) {
       console.log(err.response.data);
     }
   };
+
+  useEffect(() => {
+    getProductsOfCategoryWomen();
+  }, []);
 
   const columns = useMemo(
     () => [
@@ -77,7 +81,7 @@ export default function ProductsTabel() {
       {
         field: "productVariants",
         headerName: "Attributes & Attributes values",
-        width: 200,
+        width: 250,
         align: "center",
         headerAlign: "center",
         renderCell: (params) => {
@@ -88,9 +92,8 @@ export default function ProductsTabel() {
                   {entry.productAttributeValues &&
                     entry.productAttributeValues.map((attrValue) => (
                       <div key={attrValue.id}>
-                        {attrValue.productAttribute.name}
-                        {" "}
-                        {attrValue.value} ({"in stock: "}
+                        {attrValue.productAttribute.name} {attrValue.value} (
+                        {"in stock: "}
                         {entry.quantityInStock})
                       </div>
                     ))}
@@ -106,16 +109,6 @@ export default function ProductsTabel() {
         width: 180,
         align: "center",
         headerAlign: "center",
-      },
-      {
-        field: "subcategory.category",
-        headerName: "Category",
-        width: 200,
-        align: "center",
-        headerAlign: "center",
-        valueGetter: (params) => {
-          return params.row.subcategory.category.name;
-        },
       },
       {
         field: "subcategory",
@@ -149,14 +142,14 @@ export default function ProductsTabel() {
 
   return (
     <React.Fragment>
-      <div className="tabel-title">PRODUCTS</div>
+      <div className="tabel-title">PRODUCTS WOMEN</div>
       <div className="table-position">
         <div style={{ marginTop: "50px" }}>
           <Box sx={{ height: 330, width: 950 }}>
             <DataGrid
               className="custom-datagrid"
               columns={columns}
-              rows={products}
+              rows={productsWomen}
               rowHeight={80}
               pageSize={pageSize}
               headerHeight={80}
