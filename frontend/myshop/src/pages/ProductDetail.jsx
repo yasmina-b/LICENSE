@@ -4,7 +4,8 @@ import axios from "axios";
 import "../styles/ProductDetail.css";
 import ProductsPromo from "../components/ProductsPromo";
 import Card from "../components/Card";
-import { Plus, Minus, X } from "react-feather";
+import { Plus, Minus } from "react-feather";
+import Alert from "@mui/material/Alert";
 import AuthContext from "../context/AuthContext";
 
 const ProductDetail = () => {
@@ -17,15 +18,13 @@ const ProductDetail = () => {
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [quantityInCart, setQuantityInCart] = useState(1);
-  const [pricePerEntry, setPricePerEntry] = useState("");
-  const [totalPriceEntry, setTotalPriceEntry] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [itemOutOfStock, setItemOutOfStock] = useState(false);
 
   const { productId } = useParams();
   const navigate = useNavigate();
   const { user } = React.useContext(AuthContext);
-
-  console.log(user);
 
   const getProductVariantsOfProduct = async () => {
     try {
@@ -137,26 +136,28 @@ const ProductDetail = () => {
 
   const handleAddToBag = async () => {
     if (selectedVariant) {
+      if (selectedVariant.quantityInStock === 0) {
+        setItemOutOfStock(true);
+        return;
+      }
+
       try {
         const res = await axios.post("http://localhost:3001/cartEntries", {
           quantityInCart,
           pricePerEntry: selectedVariant.product.price,
           totalPriceEntry: quantityInCart * selectedVariant.product.price,
           productVariant: selectedVariant.id,
-          cartId: user.user.cart.id
+          cartId: user.user.cart.id,
         });
 
         if (res.status === 200) {
-          alert("added to cart");
-          console.log(res.data);
+          setAddedToCart(true);
         }
       } catch (err) {
         console.log(err.response.data);
       }
     }
   };
-
-  console.log(selectedVariant);
 
   return (
     <React.Fragment>
@@ -221,6 +222,29 @@ const ProductDetail = () => {
               </div>
             ))}
           </div>
+          {addedToCart && (
+            <Alert
+              sx={{ backgroundColor: "white", marginTop: "50px" }}
+              severity="success"
+              onClose={() => {
+                setAddedToCart(false);
+              }}
+            >
+              Product added to cart!
+            </Alert>
+          )}
+
+          {itemOutOfStock && (
+            <Alert
+              sx={{ backgroundColor: "white", marginTop: "50px" }}
+              severity="error"
+              onClose={() => {
+                setItemOutOfStock(false);
+              }}
+            >
+              Sorry, this size is out of stock!
+            </Alert>
+          )}
           <div className="buttons-position">
             <button
               id="myButton"

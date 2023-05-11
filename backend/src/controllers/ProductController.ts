@@ -11,6 +11,8 @@ import {
   getProductsFromFirstCategory,
   getProductsFromLastCategory,
   getRelatedProducts,
+  getTotalMenProducts,
+  getTotalWomenProducts,
 } from "../services/ProductService";
 const router = express.Router();
 
@@ -27,5 +29,7 @@ router.get("/products/:subcategoryId", getProductsBySubcategoryId);
 router.get("/productsCategory/:categoryId", getProductsByCategoryId);
 router.post("/admin/product/:subcategoryId", verifyToken, createProduct);
 router.delete("/admin/product/:productId", verifyToken, deleteProduct);
+router.get("/productsW", getTotalWomenProducts);
+router.get("/productsM", getTotalMenProducts);
 
 module.exports = router;

@@ -22,23 +22,25 @@ export default function AddCategory() {
   const createCategory = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        "http://localhost:3001/admin/category",
-        {
-          name,
-          imageURL,
-          description,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
+      if (user?.token) {
+        const res = await axios.post(
+          "http://localhost:3001/admin/category",
+          {
+            name,
+            imageURL,
+            description,
           },
-        }
-      );
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
 
-      if (res.status === 200) {
-        console.log(res.data);
-        setCategoryCreated(true);
+        if (res.status === 200) {
+          console.log(res.data);
+          setCategoryCreated(true);
+        }
       }
     } catch (err) {
       console.log(err.response.data);

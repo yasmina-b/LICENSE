@@ -45,21 +45,23 @@ export default function AddVariant() {
   const createVariant = async (e, productId) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        `http://localhost:3001/admin/productVariant/${productId}`,
-        {
-          quantityInStock,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
+      if (user?.token) {
+        const res = await axios.post(
+          `http://localhost:3001/admin/productVariant/${productId}`,
+          {
+            quantityInStock,
           },
-        }
-      );
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
 
-      if (res.status === 200) {
-        console.log(res.data);
-        setVariantCreated(true);
+        if (res.status === 200) {
+          console.log(res.data);
+          setVariantCreated(true);
+        }
       }
     } catch (err) {
       console.log(err.response.data);

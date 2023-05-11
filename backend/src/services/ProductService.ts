@@ -5,7 +5,6 @@ import Subcategory from "../entities/Subcategory";
 import Product from "../entities/Product";
 import ProductAttributeValue from "../entities/ProductAttributeValue";
 import Category from "../entities/Category";
-import { Not } from "typeorm";
 import ProductVariant from "../entities/ProductVariant";
 
 export const getAllProducts = async (req: Request, res: Response) => {
@@ -93,10 +92,7 @@ export const getProductsBySubcategoryId = async (
 
     const products = await AppDataSource.getRepository(Subcategory).find({
       where: { id: subcategoryId },
-      relations: ["products"],
-      order: {
-        name: "ASC",
-      },
+      relations: ["products", "productAttributes", "productAttributes.productAttributeValues"],
     });
     const productsList = products.length > 0 ? products[0].products : [];
     return res.json(productsList);
@@ -111,7 +107,12 @@ export const getProductsByCategoryId = async (req: Request, res: Response) => {
   try {
     const products = await AppDataSource.getRepository(Category).find({
       where: { id: categoryId },
-      relations: ["subcategories", "subcategories.products"],
+      relations: [
+        "subcategories",
+        "subcategories.products",
+        "subcategories.products.productVariants",
+        "subcategories.products.productVariants.productAttributeValues",
+      ],
     });
     const subcategories = products.flatMap(
       (category) => category.subcategories
@@ -241,10 +242,50 @@ export const deleteProduct = async (
         .json(`Product with id ${productId} does not exist`);
     }
 
-    await AppDataSource.getRepository(ProductVariant).remove(product.productVariants);
+    await AppDataSource.getRepository(ProductVariant).remove(
+      product.productVariants
+    );
     await AppDataSource.getRepository(Product).remove(product);
 
     return res.json("Product deleted successfully");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+export const getTotalWomenProducts = async (req: Request, res: Response) => {
+  try {
+    const womenCategory = await AppDataSource.getRepository(Category).findOne({
+      where: { name: "Women" },
+      relations: ["subcategories", "subcategories.products"],
+    });
+    let totalWomenProducts = 0;
+    if (womenCategory && womenCategory.subcategories) {
+      womenCategory.subcategories.forEach((subcat) => {
+        totalWomenProducts += subcat.products.length;
+      });
+    }
+    return res.json({ totalWomenProducts });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+export const getTotalMenProducts = async (req: Request, res: Response) => {
+  try {
+    const menCategory = await AppDataSource.getRepository(Category).findOne({
+      where: { name: "Men" },
+      relations: ["subcategories", "subcategories.products"],
+    });
+    let totalMenProducts = 0;
+    if (menCategory && menCategory.subcategories) {
+      menCategory.subcategories.forEach((subcat) => {
+        totalMenProducts += subcat.products.length;
+      });
+    }
+    return res.json({ totalMenProducts });
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
@@ -262,4 +303,6 @@ module.exports = {
   getProductsFromLastCategory,
   createProduct,
   deleteProduct,
+  getTotalWomenProducts,
+  getTotalMenProducts,
 };

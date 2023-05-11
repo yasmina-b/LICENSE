@@ -48,6 +48,11 @@ export const createOrder = async (req: Request, res: Response) => {
       const productVariant = cartEntry.productVariant;
       const newQuantityInStock =
         productVariant.quantityInStock - cartEntry.quantityInCart;
+      if (newQuantityInStock < 0) {
+        throw new Error(
+          `Not enough quantity in stock for product variant ${productVariant.id}`
+        );
+      }
       productVariant.quantityInStock = newQuantityInStock;
       await productVariantRepository.save(productVariant);
     }
@@ -154,10 +159,7 @@ export const getOrder = async (req: Request, res: Response) => {
     return res.status(500).json(error);
   }
 };
-export const deleteOrder = async (
-  req: AuthenticatedRequest,
-  res: Response
-) => {
+export const deleteOrder = async (req: AuthenticatedRequest, res: Response) => {
   const { orderId } = req.params;
   const { tkUser } = req;
 
@@ -174,9 +176,7 @@ export const deleteOrder = async (
     });
 
     if (!order) {
-      return res
-        .status(404)
-        .json(`Order with id ${orderId} does not exist`);
+      return res.status(404).json(`Order with id ${orderId} does not exist`);
     }
 
     await AppDataSource.getRepository(CartEntry).remove(order.cartEntries);
@@ -213,6 +213,56 @@ export const getTotalEarnings = async (
   }
 };
 
+export const getMostBoughtProductVariant = async (
+  req: AuthenticatedRequest,
+  res: Response
+) => {
+  const { tkUser } = req;
+  try {
+    if (!tkUser.isAdmin) {
+      return res
+        .status(401)
+        .json("You are not authorized to see the most bought product!");
+    }
+    const orderRepository = AppDataSource.getRepository(Order);
+    const orders = await orderRepository.find({
+      relations: [
+        "cartEntries",
+        "cartEntries.productVariant",
+        "cartEntries.productVariant.productAttributeValues",
+      ],
+    });
+
+    const productVariantMap = new Map<number, number>();
+    let maxBoughtCount = 0;
+    let mostBoughtProductVariant: ProductVariant | undefined;
+
+    orders.forEach((order) => {
+      order.cartEntries.forEach((cartEntry) => {
+        const productVariantId = cartEntry.productVariant.id;
+        if (productVariantId !== null && productVariantId !== undefined) {
+          const currentBoughtCount =
+            productVariantMap.get(parseInt(productVariantId)) || 0;
+          const updatedBoughtCount =
+            currentBoughtCount + cartEntry.quantityInCart;
+
+          productVariantMap.set(parseInt(productVariantId), updatedBoughtCount);
+
+          if (updatedBoughtCount > maxBoughtCount) {
+            maxBoughtCount = updatedBoughtCount;
+            mostBoughtProductVariant = cartEntry.productVariant;
+          }
+        }
+      });
+    });
+
+    res.send(mostBoughtProductVariant);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Failed to retrieve most bought product variant");
+  }
+};
+
 module.exports = {
   createOrder,
   getAllOrders,
@@ -220,4 +270,5 @@ module.exports = {
   getOrder,
   deleteOrder,
   getTotalEarnings,
+  getMostBoughtProductVariant,
 };

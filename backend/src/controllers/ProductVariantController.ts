@@ -6,7 +6,9 @@ import {
   getProductAttributeValuesByProductVariantId,
   getProductVariantByProductAttributeValue,
   getProductVariantByProductVariantId,
+  getProductVariantsByProductAttributeValue,
   getProductVariantsByProductId,
+  updateProductVariant,
 } from "../services/ProductVariantService";
 
 const router = express.Router();
@@ -22,9 +24,14 @@ router.get(
 );
 router.get("/productVariants", getAllProductVariants);
 router.get("/productVariantBySize", getProductVariantByProductAttributeValue);
+router.get(
+  "/filteredBySize/:subcategoryId",
+  getProductVariantsByProductAttributeValue
+);
 router.post(
   "/admin/productVariant/:productId",
   createProductVariant
 );
+router.put("/updateProductVariant/:productVariantId", updateProductVariant);
 
 module.exports = router;

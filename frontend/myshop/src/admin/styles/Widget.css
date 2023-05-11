@@ -8,6 +8,10 @@
   background-color: #d8d1d1;
 }
 
+.widget.most-bought-widget {
+  width: 50%;
+}
+
 .widgets {
   display: flex;
   padding: 50px;
@@ -37,7 +41,22 @@
 .widget-title {
   font-weight: bold;
   font-size: 14px;
-  color: black
+  color: black;
+  margin-right: 15px;
+}
+
+.widget-title-product {
+  font-weight: bold;
+  font-size: 11px;
+  color: black;
+}
+
+.widget-product {
+  font-size: 14px;
+  color: black;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 2px;
 }
 
 .widget-counter {

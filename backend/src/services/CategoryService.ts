@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { AuthenticatedRequest } from "../middleware/verifyToken";
 import { AppDataSource } from "../data-source";
 import Category from "../entities/Category";
-import { Repository } from "typeorm";
 import Subcategory from "../entities/Subcategory";
 import Product from "../entities/Product";
 

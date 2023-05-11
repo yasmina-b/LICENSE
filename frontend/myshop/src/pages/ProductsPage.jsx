@@ -12,6 +12,11 @@ const ProductsPage = () => {
   const [productsOfSubcategory, setProductsOfSubcategory] = useState([]);
   const [subcategoryName, setSubcategoryName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortedProducts, setSortedProducts] = useState([]);
+  const [productSizes, setProductSizes] = useState([]);
+  const [filteredBySize, setFilteredBySize] = useState([]);
+  const [sortedFilteredProducts, setSortedFilteredProducts] = useState([]);
 
   const getProductsOfSubcategory = async () => {
     try {
@@ -27,13 +32,69 @@ const ProductsPage = () => {
     }
   };
 
+  const getProductsSizesOfSubcategory = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/productSizes/${subcategoryId}`
+      );
+      setProductSizes(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getFilteredProductsBySize = async (productAttributeValueId) => {
+    console.log(productAttributeValueId);
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/filteredBySize/${subcategoryId}?productAttributeValueId=${productAttributeValueId}`
+      );
+      setFilteredBySize(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     getProductsOfSubcategory();
+    getProductsSizesOfSubcategory();
   }, [subcategoryId]);
 
-  const filteredProducts = productsOfSubcategory.filter((product) => {
-    return product.name.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+  useEffect(() => {
+    const filtered = productsOfSubcategory.filter((product) => {
+      return product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+
+    const sorted = filtered.sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.price - b.price;
+      } else {
+        return b.price - a.price;
+      }
+    });
+
+    setSortedProducts(sorted);
+  }, [sortOrder, productsOfSubcategory, searchTerm]);
+
+  useEffect(() => {
+    const filtered = filteredBySize.filter((product) => {
+      return product.product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+
+    const sorted = filtered.sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.product.price - b.product.price;
+      } else {
+        return b.product.price - a.product.price;
+      }
+    });
+
+    setSortedFilteredProducts(sorted);
+  }, [sortOrder, filteredBySize, searchTerm]);
+
+  const handleSortOrderChange = (e) => {
+    setSortOrder(e.target.value);
+  };
 
   return (
     <React.Fragment>
@@ -49,6 +110,41 @@ const ProductsPage = () => {
       <nav className="navbar">
         <div className="navbar-items">
           <div className="navbar-item">
+            <label htmlFor="sort-order-select" className="price-select-label">
+              FILTER BY SIZE:{" "}
+            </label>
+            <select
+              id="sort-order-select"
+              className="price-select"
+              onChange={(e) => {
+                const productAttributeValueId = e.target.value;
+                getFilteredProductsBySize(productAttributeValueId);
+              }}
+            >
+              <option>ALL</option>
+              {productSizes &&
+                productSizes.map((ps) => (
+                  <option key={ps.id} value={ps.id}>
+                    {ps.value}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div className="navbar-item">
+            <label htmlFor="sort-order-select" className="price-select-label">
+              SORT BY PRICE:{" "}
+            </label>
+            <select
+              id="sort-order-select"
+              className="price-select"
+              value={sortOrder}
+              onChange={handleSortOrderChange}
+            >
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </div>
+          <div className="navbar-item">
             <input
               className="input-with-icons"
               placeholder="Search for..."
@@ -62,20 +158,27 @@ const ProductsPage = () => {
         </div>
       </nav>
       <div className="products-page">
-        {/* <div className="left-part">
-          <div>SORT BY</div>
-          <div>FILTER</div>
-          <div>ORDER BY</div>
-        </div> */}
         <div className="right-part">
           <div className="products-list">
-            {filteredProducts.map((product) => (
-              <React.Fragment key={product.id}>
-                <div onClick={() => navigate(`/productVariants/${product.id}`)}>
-                  <Card item={product} />
-                </div>
-              </React.Fragment>
-            ))}
+            {sortedFilteredProducts.length > 0
+              ? sortedFilteredProducts.map((product) => (
+                  <React.Fragment key={product.id}>
+                    <div
+                      onClick={() => navigate(`/productVariants/${product.id}`)}
+                    >
+                      <Card item={product.product} />
+                    </div>
+                  </React.Fragment>
+                ))
+              : sortedProducts.map((product) => (
+                  <React.Fragment key={product.id}>
+                    <div
+                      onClick={() => navigate(`/productVariants/${product.id}`)}
+                    >
+                      <Card item={product} />
+                    </div>
+                  </React.Fragment>
+                ))}
           </div>
         </div>
       </div>
