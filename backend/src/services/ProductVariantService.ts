@@ -5,6 +5,7 @@ import Product from "../entities/Product";
 import ProductVariant from "../entities/ProductVariant";
 import ProductAttributeValue from "../entities/ProductAttributeValue";
 import Subcategory from "../entities/Subcategory";
+import Category from "../entities/Category";
 
 export const getProductVariantsByProductId = async (
   req: Request,
@@ -163,6 +164,55 @@ export const getProductVariantsByProductAttributeValue = async (
   }
 };
 
+export const getProductVariantsOfCategoyByProductAttributeValue = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const categoryId = req.params.categoryId;
+    const productAttributeValueId = req.query.productAttributeValueId;
+
+    const categoryRepository = AppDataSource.getRepository(Category);
+    const category = await categoryRepository.findOne({
+      where: { id: categoryId },
+      relations: [
+        "subcategories.productAttributes",
+        "subcategories.productAttributes.productAttributeValues",
+        "subcategories.products",
+        "subcategories.products.productVariants",
+        "subcategories.products.productVariants.productAttributeValues",
+      ],
+    });
+
+    const productVariants = category.subcategories.reduce(
+      (acc: ProductVariant[], subcategory: Subcategory) => {
+        const subcategoryProductVariants = subcategory.products.reduce(
+          (subAcc: ProductVariant[], product: Product) => {
+            return subAcc.concat(product.productVariants);
+          },
+          []
+        );
+        return acc.concat(subcategoryProductVariants);
+      },
+      []
+    );
+
+    const productVariantsWithAttribute = productVariants
+      .filter((variant) =>
+        variant.productAttributeValues.some(
+          (value) => value.id === productAttributeValueId
+        )
+      )
+      .filter((variant) => variant.quantityInStock > 0);
+
+    return res.json(productVariantsWithAttribute);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+
 export const getAllProductVariants = async (req: Request, res: Response) => {
   try {
     const productVariants = await AppDataSource.getRepository(
@@ -244,8 +294,14 @@ export const updateProductVariant = async (
 ) => {
   const { quantityInStock } = req.body;
   const { productVariantId } = req.params;
+  const { tkUser } = req;
 
   try {
+     if (!tkUser.isAdmin) {
+      return res
+        .status(401)
+        .json("You are not authorized to update product variants!");
+    }
     const productVariant = await AppDataSource.getRepository(
       ProductVariant
     ).findOne({
@@ -278,6 +334,7 @@ module.exports = {
   getProductAttributeValuesByProductVariantId,
   getProductVariantByProductAttributeValue,
   getProductVariantsByProductAttributeValue,
+  getProductVariantsOfCategoyByProductAttributeValue,
   createProductVariant,
   updateProductVariant,
 };

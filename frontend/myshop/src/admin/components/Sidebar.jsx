@@ -6,6 +6,7 @@ import AddProduct from "./AddProduct";
 import AddProductAttribute from "./AddProductAttribute";
 import AddSubcategory from "./AddSubcategory";
 import AddVariant from "./AddVariant";
+import UpdateVariant from "./UpdateVariant";
 
 export default function Sidebar() {
   const [activeTitle, setActiveTitle] = useState(null);
@@ -59,6 +60,9 @@ export default function Sidebar() {
             </li>
             <li>
               <AddAttributeValues />
+            </li>
+            <li>
+              <UpdateVariant />
             </li>
           </ul>
         </div>
