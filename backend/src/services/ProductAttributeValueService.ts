@@ -6,6 +6,7 @@ import ProductAttributeValue from "../entities/ProductAttributeValue";
 import Subcategory from "../entities/Subcategory";
 import ProductVariant from "../entities/ProductVariant";
 import Product from "../entities/Product";
+import Category from "../entities/Category";
 
 export const getAllProductAttributeValues = async (
   req: Request,
@@ -70,6 +71,83 @@ export const getProductAttributeValuesBySubcategory = async (
   }
 };
 
+export const getProductAttributeValuesByCategoryId = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const categoryId = req.params.categoryId;
+
+    const categoryRepository = AppDataSource.getRepository(Category);
+    const category = await categoryRepository.findOne({
+      where: { id: categoryId },
+      relations: [
+        "subcategories",
+        "subcategories.productAttributes",
+        "subcategories.productAttributes.productAttributeValues",
+        "subcategories.products",
+        "subcategories.products.productVariants",
+        "subcategories.products.productVariants.productAttributeValues",
+      ],
+    });
+
+    const subcategoryProductAttributeValues = category.subcategories.reduce(
+      (acc: ProductAttributeValue[], subcategory: Subcategory) => {
+        return acc.concat(
+          subcategory.productAttributes.reduce(
+            (acc2: ProductAttributeValue[], productAttribute) => {
+              return acc2.concat(productAttribute.productAttributeValues);
+            },
+            []
+          )
+        );
+      },
+      []
+    );
+
+    const productVariantAttributeValues = category.subcategories.reduce(
+      (acc: ProductAttributeValue[], subcategory: Subcategory) => {
+        return acc.concat(
+          subcategory.products.reduce(
+            (acc2: ProductAttributeValue[], product: Product) => {
+              return acc2.concat(
+                product.productVariants.reduce(
+                  (
+                    acc3: ProductAttributeValue[],
+                    productVariant: ProductVariant
+                  ) => {
+                    return acc3.concat(productVariant.productAttributeValues);
+                  },
+                  []
+                )
+              );
+            },
+            []
+          )
+        );
+      },
+      []
+    );
+
+    const uniqueProductAttributeValues = Array.from(
+      new Set(
+        subcategoryProductAttributeValues
+          .concat(productVariantAttributeValues)
+          .map((value) => value.id)
+      )
+    ).map((id) => {
+      return subcategoryProductAttributeValues
+        .concat(productVariantAttributeValues)
+        .find((value) => value.id === id);
+    });
+
+    return res.json(uniqueProductAttributeValues);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
 export const createProductAttributeValue = async (
   req: AuthenticatedRequest,
   res: Response
@@ -116,5 +194,6 @@ export const createProductAttributeValue = async (
 module.exports = {
   getAllProductAttributeValues,
   getProductAttributeValuesBySubcategory,
+  getProductAttributeValuesByCategoryId,
   createProductAttributeValue,
 };

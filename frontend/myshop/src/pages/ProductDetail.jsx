@@ -21,6 +21,7 @@ const ProductDetail = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [addedToCart, setAddedToCart] = useState(false);
   const [itemOutOfStock, setItemOutOfStock] = useState(false);
+  const [notEnoughInStock, setNotEnoughInStock] = useState(false);
 
   const { productId } = useParams();
   const navigate = useNavigate();
@@ -118,26 +119,15 @@ const ProductDetail = () => {
     setIsButtonDisabled(!selectedProductAttributeValue);
   }, [selectedProductAttributeValue]);
 
-  // const handleAddToBag = () => {
-  //   if (selectedVariant) {
-  //     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  //     const isVariantAlreadyInCart = cart.some(
-  //       (variant) => variant.id === selectedVariant.id
-  //     );
-  //     if (!isVariantAlreadyInCart) {
-  //       cart.push(selectedVariant);
-  //       localStorage.setItem("cart", JSON.stringify(cart));
-  //       alert("Product added to cart!");
-  //     } else {
-  //       alert("Product is already in cart!");
-  //     }
-  //   }
-  // };
-
   const handleAddToBag = async () => {
     if (selectedVariant) {
       if (selectedVariant.quantityInStock === 0) {
         setItemOutOfStock(true);
+        return;
+      }
+
+      if (selectedVariant.quantityInStock < quantityInCart) {
+        setNotEnoughInStock(true);
         return;
       }
 
@@ -211,7 +201,11 @@ const ProductDetail = () => {
             {productAttributeValues.map((productAttributeValue) => (
               <div key={productAttributeValue.id}>
                 <option
-                  className="select-size"
+                  className={`select-size ${
+                    selectedProductAttributeValue === productAttributeValue
+                      ? "selected"
+                      : ""
+                  }`}
                   onClick={(e) => {
                     setSelectedProductAttributeValue(productAttributeValue);
                     e.target.classList.add("selected");
@@ -233,7 +227,17 @@ const ProductDetail = () => {
               Product added to cart!
             </Alert>
           )}
-
+          {notEnoughInStock && (
+            <Alert
+              sx={{ backgroundColor: "white", marginTop: "50px" }}
+              severity="error"
+              onClose={() => {
+                setNotEnoughInStock(false);
+              }}
+            >
+              Sorry, not enogh products in stock!
+            </Alert>
+          )}
           {itemOutOfStock && (
             <Alert
               sx={{ backgroundColor: "white", marginTop: "50px" }}

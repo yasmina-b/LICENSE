@@ -8,6 +8,7 @@ import {
   getProductVariantByProductVariantId,
   getProductVariantsByProductAttributeValue,
   getProductVariantsByProductId,
+  getProductVariantsOfCategoyByProductAttributeValue,
   updateProductVariant,
 } from "../services/ProductVariantService";
 
@@ -28,10 +29,15 @@ router.get(
   "/filteredBySize/:subcategoryId",
   getProductVariantsByProductAttributeValue
 );
-router.post(
-  "/admin/productVariant/:productId",
-  createProductVariant
+router.get(
+  "/filteredBySizeCategory/:categoryId",
+  getProductVariantsOfCategoyByProductAttributeValue
 );
-router.put("/updateProductVariant/:productVariantId", updateProductVariant);
+router.post("/admin/productVariant/:productId", createProductVariant);
+router.put(
+  "/updateProductVariant/:productVariantId",
+  verifyToken,
+  updateProductVariant
+);
 
 module.exports = router;

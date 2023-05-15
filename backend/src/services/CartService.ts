@@ -16,7 +16,15 @@ export const createCart = async (req: Request, res: Response) => {
     });
 
     if (variant.quantityInStock <= 0) {
-      return res.status(400).json({ message: "Selected product is out of stock" });
+      return res
+        .status(400)
+        .json({ message: "Selected product is out of stock" });
+    }
+
+    if (variant.quantityInStock < quantityInCart) {
+      return res
+        .status(400)
+        .json({ message: "Selected product does not have enough stock" });
     }
 
     const existingCartEntry = await AppDataSource.getRepository(

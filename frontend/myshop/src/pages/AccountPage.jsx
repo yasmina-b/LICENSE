@@ -128,9 +128,14 @@ const AccountPage = () => {
                 {orders &&
                   orders.map((order, index) => (
                     <tr key={order.id}>
-                      <td>{index + 1}</td>
-                      <td>{new Date(order.orderDate).toLocaleDateString()}</td>
-                      <td> RON {order.totalOrderSum}</td>
+                      <td className="order-table-row">{index + 1}</td>
+                      <td className="order-table-row">
+                        {new Date(order.orderDate).toLocaleDateString()}
+                      </td>
+                      <td className="order-table-row">
+                        {" "}
+                        RON {order.totalOrderSum}
+                      </td>
                     </tr>
                   ))}
               </tbody>
@@ -161,8 +166,9 @@ const AccountPage = () => {
                           </td>
                           <td>
                             {entry.productVariant &&
-                              entry.productVariant.product.name} {" "}
-                            { entry.productVariant && entry.productVariant.productAttributeValues &&
+                              entry.productVariant.product.name}{" "}
+                            {entry.productVariant &&
+                              entry.productVariant.productAttributeValues &&
                               entry.productVariant.productAttributeValues.map(
                                 (attrValue) => (
                                   <span key={attrValue.id}>
@@ -170,8 +176,8 @@ const AccountPage = () => {
                                     {attrValue.value}
                                   </span>
                                 )
-                              )}
-                           {" "} X {" "} {entry.quantityInCart}
+                              )}{" "}
+                            X {entry.quantityInCart}
                           </td>
                           <td> RON {entry.totalPriceEntry}</td>
                           <td>

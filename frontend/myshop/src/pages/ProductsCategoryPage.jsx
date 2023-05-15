@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../styles/ProductsPage.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { Camera, Search } from "react-feather";
@@ -21,12 +21,44 @@ const ProductsCategoryPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortedProducts, setSortedProducts] = useState([]);
+  const [startImageSearch, setStartImageSearch] = useState(false);
+  const [buttonClicked, setButtonClicked] = useState(false);
+  const [productSizesCategory, setProductSizesCategory] = useState([]);
+  const [filteredBySize, setFilteredBySize] = useState([]);
+  const [sortedFilteredProducts, setSortedFilteredProducts] = useState([]);
 
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
 
+  const getProductsSizesOfCategory = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/productSizesCategory/${categoryId}`
+      );
+      setProductSizesCategory(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const getFilteredProductsOfCategoryBySize = async (
+    productAttributeValueId
+  ) => {
+    console.log(productAttributeValueId);
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/filteredBySizeCategory/${categoryId}?productAttributeValueId=${productAttributeValueId}`
+      );
+      setFilteredBySize(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handleClick = (e) => {
     e.preventDefault();
+    setStartImageSearch(true);
+    setButtonClicked(true);
     if (!file) {
       console.log("No file selected");
       return;
@@ -92,6 +124,7 @@ const ProductsCategoryPage = () => {
   useEffect(() => {
     getProductsOfCategory();
     getCategoryByCategoryId();
+    getProductsSizesOfCategory();
   }, []);
 
   useEffect(() => {
@@ -110,8 +143,36 @@ const ProductsCategoryPage = () => {
     setSortedProducts(sorted);
   }, [sortOrder, productsOfCategory, searchTerm]);
 
+  useEffect(() => {
+    const filtered = filteredBySize.filter((product) => {
+      return product.product.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+    });
+
+    const sorted = filtered.sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.product.price - b.product.price;
+      } else {
+        return b.product.price - a.product.price;
+      }
+    });
+
+    setSortedFilteredProducts(sorted);
+  }, [sortOrder, filteredBySize, searchTerm]);
+
   const handleSortOrderChange = (e) => {
     setSortOrder(e.target.value);
+  };
+
+  const fileInputRef = useRef(null);
+
+  const handleCameraClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileInputChange = (e) => {
+    setFile(e.target.files[0]);
   };
 
   return (
@@ -131,6 +192,27 @@ const ProductsCategoryPage = () => {
       <ProductsPromo />
       <nav className="navbar">
         <div className="navbar-items">
+          <div className="navbar-item">
+            <label htmlFor="sort-order-select" className="price-select-label">
+              FILTER BY SIZE:{" "}
+            </label>
+            <select
+              id="sort-order-select"
+              className="price-select"
+              onChange={(e) => {
+                const productAttributeValueId = e.target.value;
+                getFilteredProductsOfCategoryBySize(productAttributeValueId);
+              }}
+            >
+              <option>ALL</option>
+              {productSizesCategory &&
+                productSizesCategory.map((ps) => (
+                  <option key={ps.id} value={ps.id}>
+                    {ps.value}
+                  </option>
+                ))}
+            </select>
+          </div>
           <div className="navbar-item">
             <label htmlFor="sort-order-select" className="price-select-label">
               SORT BY PRICE:{" "}
@@ -155,33 +237,51 @@ const ProductsCategoryPage = () => {
             />
 
             <Search className="icon-search"></Search>
-            <Camera className="icon-camera"></Camera>
-          </div>
-          <input
-            type="file"
-            id="file"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-          <button onClick={handleClick}>SHOW THE PICTURE</button>
-          {imageUrl && (
-            <img
-              src={imageUrl}
-              alt="Uploaded file"
-              style={{ maxWidth: "100%", marginTop: "10px" }}
+            <Camera className="icon-camera" onClick={handleCameraClick} />
+            <input
+              type="file"
+              id="file"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handleFileInputChange}
             />
+          </div>
+          {!buttonClicked && (
+            <button className="image-search-button" onClick={handleClick}>
+              START IMAGE SEARCH
+            </button>
           )}
         </div>
       </nav>
       <div className="products-page">
+        {startImageSearch && (
+          <div className="left-part">
+            {imageUrl && (
+              <img className="card-image" src={imageUrl} alt="Uploaded file" />
+            )}
+          </div>
+        )}
         <div className="right-part">
           <div className="products-list">
-            {sortedProducts.map((product) => (
-              <React.Fragment key={product.id}>
-                <div onClick={() => navigate(`/productVariants/${product.id}`)}>
-                  <Card item={product} />
-                </div>
-              </React.Fragment>
-            ))}
+            {sortedFilteredProducts.length > 0
+              ? sortedFilteredProducts.map((product) => (
+                  <React.Fragment key={product.id}>
+                    <div
+                      onClick={() => navigate(`/productVariants/${product.id}`)}
+                    >
+                      <Card item={product.product} />
+                    </div>
+                  </React.Fragment>
+                ))
+              : sortedProducts.map((product) => (
+                  <React.Fragment key={product.id}>
+                    <div
+                      onClick={() => navigate(`/productVariants/${product.id}`)}
+                    >
+                      <Card item={product} />
+                    </div>
+                  </React.Fragment>
+                ))}
           </div>
         </div>
       </div>
