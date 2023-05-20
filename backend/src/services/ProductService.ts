@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { AuthenticatedRequest } from "../middleware/verifyToken";
 import { AppDataSource } from "../data-source";
+import { Like } from "typeorm";
 import Subcategory from "../entities/Subcategory";
 import Product from "../entities/Product";
 import ProductAttributeValue from "../entities/ProductAttributeValue";
@@ -17,6 +18,32 @@ export const getAllProducts = async (req: Request, res: Response) => {
       ],
     });
     return res.json(products);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+export const getProductByImageURL = async (req: Request, res: Response) => {
+  try {
+    const searchString = req.query.searchString;
+    
+    const product = await AppDataSource.getRepository(Product).findOne({
+      where: {
+        firstImageURL: Like(`%${searchString}%`),
+      },
+      relations: [
+        "subcategory",
+        "productVariants",
+        "productVariants.productAttributeValues",
+      ],
+    });
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    return res.json(product);
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
@@ -92,7 +119,11 @@ export const getProductsBySubcategoryId = async (
 
     const products = await AppDataSource.getRepository(Subcategory).find({
       where: { id: subcategoryId },
-      relations: ["products", "productAttributes", "productAttributes.productAttributeValues"],
+      relations: [
+        "products",
+        "productAttributes",
+        "productAttributes.productAttributeValues",
+      ],
     });
     const productsList = products.length > 0 ? products[0].products : [];
     return res.json(productsList);
@@ -294,6 +325,7 @@ export const getTotalMenProducts = async (req: Request, res: Response) => {
 
 module.exports = {
   getAllProducts,
+  getProductByImageURL,
   getRelatedProducts,
   getProductsBySubcategoryId,
   getProductsByCategoryId,

@@ -153,7 +153,7 @@ const ProductsPage = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <Search className="icon-search"></Search>
-            <Camera className="icon-camera"></Camera>
+            {/* <Camera className="icon-camera"></Camera> */}
           </div>
         </div>
       </nav>

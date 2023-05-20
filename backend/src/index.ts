@@ -16,6 +16,8 @@ import productVariantRoutes = require("./controllers/ProductVariantController");
 import cartRoutes = require("./controllers/CartController");
 import orderRoutes = require("./controllers/OrderController");
 
+import imageRoutes = require("./controllers/ImageController");
+
 AppDataSource.initialize()
   .then(() => {
     app.use(express.json());
@@ -30,6 +32,8 @@ AppDataSource.initialize()
     app.use(productVariantRoutes);
     app.use(cartRoutes);
     app.use(orderRoutes);
+
+    app.use(imageRoutes);
 
     app.listen(3001, function () {
       console.log(`Backend server running on port ${3001}`);
