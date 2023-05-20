@@ -62,7 +62,7 @@ export default function Sidebar() {
               <AddAttributeValues />
             </li>
             <li>
-              <UpdateVariant />
+              <UpdateVariant/>
             </li>
           </ul>
         </div>

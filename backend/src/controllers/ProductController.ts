@@ -5,6 +5,7 @@ import {
   deleteProduct,
   getAllProducts,
   getProductAttributeValuesByProductId,
+  getProductByImageURL,
   getProductByProductId,
   getProductsByCategoryId,
   getProductsBySubcategoryId,
@@ -17,6 +18,7 @@ import {
 const router = express.Router();
 
 router.get("/products", getAllProducts);
+router.get("/findImage", getProductByImageURL);
 router.get("/relatedProducts/:productId/:subcategoryId", getRelatedProducts);
 router.get("/productsFirst", getProductsFromFirstCategory);
 router.get("/productsLast", getProductsFromLastCategory);

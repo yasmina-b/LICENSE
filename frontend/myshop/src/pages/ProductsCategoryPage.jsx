@@ -5,13 +5,6 @@ import { Camera, Search } from "react-feather";
 import axios from "axios";
 import Card from "../components/Card";
 import ProductsPromo from "../components/ProductsPromo";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
-import app from "../firebase";
 
 const ProductsCategoryPage = () => {
   const navigate = useNavigate();
@@ -27,8 +20,13 @@ const ProductsCategoryPage = () => {
   const [filteredBySize, setFilteredBySize] = useState([]);
   const [sortedFilteredProducts, setSortedFilteredProducts] = useState([]);
 
+  const [productsSearchByImage, setProductsSearchByImage] = useState([]);
+
   const [file, setFile] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [uploadResponse, setUploadResponse] = useState([]);
+
+  const fileInputRef = useRef(null);
 
   const getProductsSizesOfCategory = async () => {
     try {
@@ -55,48 +53,56 @@ const ProductsCategoryPage = () => {
     }
   };
 
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
     setStartImageSearch(true);
     setButtonClicked(true);
-    if (!file) {
+    if (!selectedImage) {
       console.log("No file selected");
       return;
     }
-    const fileName = new Date().getTime() + file.name;
-    const storage = getStorage(app);
-    const storageRef = ref(storage, fileName);
-    const uploadTask = uploadBytesResumable(storageRef, file);
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-          default:
-        }
-      },
-      (error) => {
-        console.error(error);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setImageUrl(downloadURL);
-          console.log(downloadURL);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    await axios
+      .post("http://localhost:3001/upload", formData)
+      .then((response) => {
+        console.log(response);
+        setUploadResponse(response.data);
+
+        response.data.forEach(async (item) => {
+          const searchString = item.replace(".png", ".JPG");
+
+          try {
+            const res = await axios.get("http://localhost:3001/findImage", {
+              params: {
+                searchString,
+              },
+            });
+
+            console.log(res.data);
+            setProductsSearchByImage((prevProducts) => [
+              ...prevProducts,
+              res.data,
+            ]);
+          } catch (error) {
+            console.error(error);
+          }
         });
-      }
-    );
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
-  console.log(file);
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(URL.createObjectURL(file));
+      setFile(file);
+    }
+  };
 
   const getCategoryByCategoryId = async () => {
     try {
@@ -165,14 +171,8 @@ const ProductsCategoryPage = () => {
     setSortOrder(e.target.value);
   };
 
-  const fileInputRef = useRef(null);
-
   const handleCameraClick = () => {
     fileInputRef.current.click();
-  };
-
-  const handleFileInputChange = (e) => {
-    setFile(e.target.files[0]);
   };
 
   return (
@@ -190,6 +190,7 @@ const ProductsCategoryPage = () => {
           </div>
         ))}
       <ProductsPromo />
+
       <nav className="navbar">
         <div className="navbar-items">
           <div className="navbar-item">
@@ -256,34 +257,59 @@ const ProductsCategoryPage = () => {
       <div className="products-page">
         {startImageSearch && (
           <div className="left-part">
-            {imageUrl && (
-              <img className="card-image" src={imageUrl} alt="Uploaded file" />
+            {selectedImage && (
+              <img
+                className="card-image-search"
+                src={selectedImage}
+                alt="Uploaded file"
+              />
             )}
           </div>
         )}
-        <div className="right-part">
-          <div className="products-list">
-            {sortedFilteredProducts.length > 0
-              ? sortedFilteredProducts.map((product) => (
-                  <React.Fragment key={product.id}>
-                    <div
-                      onClick={() => navigate(`/productVariants/${product.id}`)}
-                    >
-                      <Card item={product.product} />
-                    </div>
-                  </React.Fragment>
-                ))
-              : sortedProducts.map((product) => (
-                  <React.Fragment key={product.id}>
-                    <div
-                      onClick={() => navigate(`/productVariants/${product.id}`)}
-                    >
-                      <Card item={product} />
-                    </div>
-                  </React.Fragment>
-                ))}
+        {startImageSearch ? (
+          <div className="right-part">
+            {/* Render the productsSearchByImage */}
+            <div className="products-list">
+              {productsSearchByImage.map((product) => (
+                <React.Fragment key={product.id}>
+                  <div
+                    onClick={() => navigate(`/productVariants/${product.id}`)}
+                  >
+                    <Card item={product} />
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="right-part">
+            <div className="products-list">
+              {sortedFilteredProducts.length > 0
+                ? sortedFilteredProducts.map((product) => (
+                    <React.Fragment key={product.id}>
+                      <div
+                        onClick={() =>
+                          navigate(`/productVariants/${product.id}`)
+                        }
+                      >
+                        <Card item={product.product} />
+                      </div>
+                    </React.Fragment>
+                  ))
+                : sortedProducts.map((product) => (
+                    <React.Fragment key={product.id}>
+                      <div
+                        onClick={() =>
+                          navigate(`/productVariants/${product.id}`)
+                        }
+                      >
+                        <Card item={product} />
+                      </div>
+                    </React.Fragment>
+                  ))}
+            </div>
+          </div>
+        )}
       </div>
     </React.Fragment>
   );
