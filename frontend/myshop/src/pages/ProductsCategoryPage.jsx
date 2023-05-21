@@ -238,7 +238,7 @@ const ProductsCategoryPage = () => {
             />
 
             <Search className="icon-search"></Search>
-            <Camera className="icon-camera" onClick={handleCameraClick} />
+            {/* <Camera className="icon-camera" onClick={handleCameraClick} /> */}
             <input
               type="file"
               id="file"
@@ -247,11 +247,11 @@ const ProductsCategoryPage = () => {
               onChange={handleFileInputChange}
             />
           </div>
-          {!buttonClicked && (
+          {/* {!buttonClicked && (
             <button className="image-search-button" onClick={handleClick}>
               START IMAGE SEARCH
             </button>
-          )}
+          )} */}
         </div>
       </nav>
       <div className="products-page">
@@ -284,29 +284,31 @@ const ProductsCategoryPage = () => {
         ) : (
           <div className="right-part">
             <div className="products-list">
-              {sortedFilteredProducts.length > 0
-                ? sortedFilteredProducts.map((product) => (
-                    <React.Fragment key={product.id}>
-                      <div
-                        onClick={() =>
-                          navigate(`/productVariants/${product.id}`)
-                        }
-                      >
-                        <Card item={product.product} />
-                      </div>
-                    </React.Fragment>
-                  ))
-                : sortedProducts.map((product) => (
-                    <React.Fragment key={product.id}>
-                      <div
-                        onClick={() =>
-                          navigate(`/productVariants/${product.id}`)
-                        }
-                      >
-                        <Card item={product} />
-                      </div>
-                    </React.Fragment>
-                  ))}
+              {sortedFilteredProducts.length > 0 ? (
+                sortedFilteredProducts.map((product) => (
+                  <React.Fragment key={product.id}>
+                    <div
+                      onClick={() => navigate(`/productVariants/${product.id}`)}
+                    >
+                      <Card item={product.product} />
+                    </div>
+                  </React.Fragment>
+                ))
+              ) : sortedProducts.length > 0 ? (
+                sortedProducts.map((product) => (
+                  <React.Fragment key={product.id}>
+                    <div
+                      onClick={() => navigate(`/productVariants/${product.id}`)}
+                    >
+                      <Card item={product} />
+                    </div>
+                  </React.Fragment>
+                ))
+              ) : (
+                <p className="no-products">
+                  SORRY! No products match your search.
+                </p>
+              )}
             </div>
           </div>
         )}

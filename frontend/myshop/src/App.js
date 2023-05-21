@@ -20,6 +20,7 @@ import RegisterPage from "./pages/RegisterPage";
 import AdminCategories from "./admin/pages/AdminCategories";
 import AdminProducts from "./admin/pages/AdminProducts";
 import OrderConfirmationPage from "./pages/OrderConfirmationPage";
+import ImageSearchPage from "./pages/ImageSearchPage";
 
 function App() {
   const { user } = React.useContext(AuthContext);
@@ -143,6 +144,18 @@ function App() {
               <Accountbar />
               <Shopbar />
               <CheckoutPage />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/searchByImage"
+          element={
+            <>
+              <Promo />
+              <Accountbar />
+              <Shopbar />
+              <ImageSearchPage />
               <Footer />
             </>
           }

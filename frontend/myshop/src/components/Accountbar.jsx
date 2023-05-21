@@ -4,14 +4,22 @@ import AuthContext from "../context/AuthContext";
 import "../styles/Accountbar.css";
 import "../styles/Navbar.css";
 import { Link, useNavigate } from "react-router-dom";
+import { Camera } from "react-feather";
 
 const Accountbar = () => {
   const { user } = React.useContext(AuthContext);
   const navigate = useNavigate();
 
-  const cartId = user.user.cart.id;
+  let cartId = null;
+  if (user && user.user && user.user.cart) {
+    cartId = user.user.cart.id;
+  }
 
   const [cartEntries, setCartEntries] = useState([]);
+
+  const logout = () => {
+    localStorage.removeItem("user");
+  };
 
   useEffect(() => {
     const cartItems = JSON.parse(localStorage.getItem("cart"));
@@ -32,15 +40,29 @@ const Accountbar = () => {
             ""
           )}
           <li className="navbar-item">
-            <a className="navbar-item-style" href="/login">
-              LOG IN
+            {user && user ? (
+              <a className="navbar-item-style" href="/" onClick={logout}>
+                LOG OUT
+              </a>
+            ) : (
+              <a className="navbar-item-style" href="/login">
+                LOG IN
+              </a>
+            )}
+          </li>
+
+          <li className="navbar-item">
+            <a href="/searchByImage">
+              <Camera />
             </a>
           </li>
+
           <li className="navbar-item">
             <a href="/account">
               <User></User>
             </a>
           </li>
+         
           <li className="navbar-item">
             <ShoppingBag
               className="shopping-bag-style"

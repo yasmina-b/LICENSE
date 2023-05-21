@@ -1,0 +1,25 @@
+.looking-for-title {
+  text-align: center;
+  margin-top: 50px;
+  color: #313131;
+  font-weight: 600;
+  font-size: 17px;
+  text-transform: uppercase;
+}
+
+.looking-for-subtitle {
+  text-align: center;
+  padding-left: 50px;
+  padding-right: 50px;
+  color: #666;
+  font-weight: 500;
+  font-size: 19px;
+  margin-top: 10px;
+}
+
+.icon-camera-position {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}

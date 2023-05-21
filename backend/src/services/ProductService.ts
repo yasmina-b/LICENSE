@@ -27,7 +27,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
 export const getProductByImageURL = async (req: Request, res: Response) => {
   try {
     const searchString = req.query.searchString;
-    
+
     const product = await AppDataSource.getRepository(Product).findOne({
       where: {
         firstImageURL: Like(`%${searchString}%`),
@@ -54,6 +54,9 @@ export const getRelatedProducts = async (req: Request, res: Response) => {
   try {
     const subcategoryId = req.params.subcategoryId;
     const productId = req.params.productId;
+    const page = Number(req.query.page) || 1;
+    const pageSize = 4;
+    const offset = (page - 1) * pageSize;
 
     const relatedProducts = await AppDataSource.getRepository(Product)
       .createQueryBuilder("product")
@@ -62,7 +65,8 @@ export const getRelatedProducts = async (req: Request, res: Response) => {
         { subcategoryId, productId }
       )
       .leftJoinAndSelect("product.subcategory", "subcategory")
-      .take(4)
+      .take(pageSize)
+      .skip(offset)
       .getMany();
 
     return res.json(relatedProducts);
