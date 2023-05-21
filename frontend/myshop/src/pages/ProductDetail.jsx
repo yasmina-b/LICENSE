@@ -179,15 +179,19 @@ const ProductDetail = () => {
 
                 <div className="product-info-title">QUANTITY</div>
                 <div className="cart-amount">
-                  <Plus
-                    onClick={() => setQuantityInCart((prev) => prev + 1)}
-                  ></Plus>
+                  <span style={{ cursor: "pointer" }}>
+                    <Plus
+                      onClick={() => setQuantityInCart((prev) => prev + 1)}
+                    ></Plus>
+                  </span>
                   <div className="cart-product-amount">{quantityInCart}</div>
-                  <Minus
-                    onClick={() =>
-                      setQuantityInCart((prev) => (prev === 1 ? 1 : prev - 1))
-                    }
-                  ></Minus>
+                  <span style={{ cursor: "pointer" }}>
+                    <Minus
+                      onClick={() =>
+                        setQuantityInCart((prev) => (prev === 1 ? 1 : prev - 1))
+                      }
+                    ></Minus>
+                  </span>
                 </div>
                 <div className="product-price">
                   RON {item.price * quantityInCart}.00

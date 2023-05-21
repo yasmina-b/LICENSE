@@ -2,6 +2,9 @@ import React from "react";
 import "../styles/AdminNavbar.css";
 
 const AdminNavbar = () => {
+  const logout = () => {
+    localStorage.removeItem("user");
+  };
   return (
     <React.Fragment>
       <nav className="navbar">
@@ -13,7 +16,7 @@ const AdminNavbar = () => {
             </a>
           </li>
           <li className="navbar-item">
-            <a className="navbar-item-style" href="/">
+            <a className="navbar-item-style" href="/" onClick={logout}>
               LOG OUT
             </a>
           </li>

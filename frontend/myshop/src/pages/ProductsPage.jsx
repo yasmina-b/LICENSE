@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/ProductsPage.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { Camera, Search } from "react-feather";
+import { Search } from "react-feather";
 import axios from "axios";
 import Card from "../components/Card";
 import ProductsPromo from "../components/ProductsPromo";
@@ -78,7 +78,9 @@ const ProductsPage = () => {
 
   useEffect(() => {
     const filtered = filteredBySize.filter((product) => {
-      return product.product.name.toLowerCase().includes(searchTerm.toLowerCase());
+      return product.product.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
     });
 
     const sorted = filtered.sort((a, b) => {
@@ -153,32 +155,35 @@ const ProductsPage = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <Search className="icon-search"></Search>
-            {/* <Camera className="icon-camera"></Camera> */}
           </div>
         </div>
       </nav>
       <div className="products-page">
         <div className="right-part">
           <div className="products-list">
-            {sortedFilteredProducts.length > 0
-              ? sortedFilteredProducts.map((product) => (
-                  <React.Fragment key={product.id}>
-                    <div
-                      onClick={() => navigate(`/productVariants/${product.id}`)}
-                    >
-                      <Card item={product.product} />
-                    </div>
-                  </React.Fragment>
-                ))
-              : sortedProducts.map((product) => (
-                  <React.Fragment key={product.id}>
-                    <div
-                      onClick={() => navigate(`/productVariants/${product.id}`)}
-                    >
-                      <Card item={product} />
-                    </div>
-                  </React.Fragment>
-                ))}
+            {sortedFilteredProducts.length > 0 ? (
+              sortedFilteredProducts.map((product) => (
+                <React.Fragment key={product.id}>
+                  <div
+                    onClick={() => navigate(`/productVariants/${product.id}`)}
+                  >
+                    <Card item={product.product} />
+                  </div>
+                </React.Fragment>
+              ))
+            ) : sortedProducts.length > 0 ? (
+              sortedProducts.map((product) => (
+                <React.Fragment key={product.id}>
+                  <div
+                    onClick={() => navigate(`/productVariants/${product.id}`)}
+                  >
+                    <Card item={product} />
+                  </div>
+                </React.Fragment>
+              ))
+            ) : (
+              <p className="no-products">SORRY! No products match your search.</p>
+            )}
           </div>
         </div>
       </div>

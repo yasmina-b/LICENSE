@@ -34,7 +34,7 @@
 
 .navbar-item {
   list-style: none;
-  padding: 10px;
+  padding: 15px;
   font-size: 13px;
   display: flex;
   align-items: center;
@@ -56,6 +56,7 @@
   position: relative;
   padding-left: 2.5rem;
   padding-right: 2.5rem;
+  border: 1px solid rgb(217, 214, 214);
 }
 
 .input-with-icons input[type="text"] {
@@ -80,7 +81,6 @@
 }
 
 .shopping-bag-style {
-  padding: 10px;
   font-size: 12px;
   position: relative;
 }

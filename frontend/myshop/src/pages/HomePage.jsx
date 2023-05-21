@@ -16,7 +16,7 @@ const HomePage = () => {
       <CategoryCard />
       <ShopPromoLast />
       <MSubcategoryCarousel />
-      <Newsletter />
+      {/* <Newsletter /> */}
     </React.Fragment>
   );
 };

@@ -57,11 +57,18 @@
 
 .image-search-button {
   padding: 10px;
-  font-size: 10px;
+  font-size: 20px;
   background-color: transparent;
   cursor: pointer;
   border: transparent;
   justify-content: center;
   letter-spacing: 2px;
   font-weight: 600;
+}
+
+.no-products {
+  text-align: center;
+  font-size: 20px;
+  text-transform: uppercase;
+  margin-left: 450px;
 }
