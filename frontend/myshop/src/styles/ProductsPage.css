@@ -1,5 +1,5 @@
 .products-page {
-  padding: 30px 50px;
+  padding: 50px 50px 50px 50px;
   display: flex;
 }
 
@@ -34,9 +34,9 @@
 
 .products-list {
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
   margin-left: 2px;
+  gap: 15px;
 }
 
 .price-select-label {

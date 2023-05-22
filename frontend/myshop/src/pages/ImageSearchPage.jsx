@@ -42,35 +42,41 @@ const ImageSearchPage = () => {
     const formData = new FormData();
     formData.append("image", file);
 
-    await axios
-      .post("http://localhost:3001/upload", formData)
-      .then((response) => {
-        console.log(response);
-        setUploadResponse(response.data);
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/upload",
+        formData
+      );
+      console.log(response);
+      setUploadResponse(response.data);
 
-        response.data.forEach(async (item) => {
-          const searchString = item.replace(".png", ".JPG");
+      const productSearchPromises = response.data.map(async (item) => {
+        const searchString = item.replace(".png", ".JPG");
 
-          try {
-            const res = await axios.get("http://localhost:3001/findImage", {
-              params: {
-                searchString,
-              },
-            });
+        try {
+          const res = await axios.get("http://localhost:3001/findImage", {
+            params: {
+              searchString,
+            },
+          });
 
-            console.log(res.data);
-            setProductsSearchByImage((prevProducts) => [
-              ...prevProducts,
-              res.data,
-            ]);
-          } catch (error) {
-            console.error(error);
-          }
-        });
-      })
-      .catch((error) => {
-        console.error(error);
+          console.log(res.data);
+          return res.data;
+        } catch (error) {
+          console.error(error);
+          return null;
+        }
       });
+
+      const products = await Promise.all(productSearchPromises);
+
+      const filteredProducts = products.filter((product) => product !== null);
+
+      setProductsSearchByImage(filteredProducts);
+    } catch (error) {
+      console.error(error);
+    }
+
     setShowButton(false);
   };
 

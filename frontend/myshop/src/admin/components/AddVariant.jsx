@@ -50,6 +50,7 @@ export default function AddVariant() {
           `http://localhost:3001/admin/productVariant/${productId}`,
           {
             quantityInStock,
+            productAttributeValueId: selectedAttributeValue
           },
           {
             headers: {
@@ -139,6 +140,7 @@ export default function AddVariant() {
           <TextField
             select
             fullWidth
+            id="selectedProduct"
             variant="standard"
             label="Select a product"
             value={selectedProduct}
