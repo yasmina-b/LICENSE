@@ -18,6 +18,7 @@ export default function AddProduct() {
   const [price, setPrice] = useState("");
   const [firstImageURL, setFirstImageURL] = useState("");
   const [secondImageURL, setSecondImageURL] = useState("");
+  const [info, setInfo] = useState("");
   const [subcategories, setSubcategories] = useState("");
   const [productCreated, setProductCreated] = useState(false);
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
@@ -45,6 +46,7 @@ export default function AddProduct() {
             price,
             firstImageURL,
             secondImageURL,
+            info
           },
           {
             headers: {
@@ -79,6 +81,7 @@ export default function AddProduct() {
     setFirstImageURL("");
     setSecondImageURL("");
     setSelectedSubcategory("");
+    setInfo("");
     setOpen(false);
     setProductCreated(false);
   };
@@ -176,6 +179,17 @@ export default function AddProduct() {
             variant="standard"
             value={secondImageURL}
             onChange={(e) => setSecondImageURL(e.target.value)}
+          />
+           <TextField
+            autoFocus
+            margin="dense"
+            id="description"
+            label="Product info"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={info}
+            onChange={(e) => setInfo(e.target.value)}
           />
           <TextField
             select

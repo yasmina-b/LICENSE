@@ -211,7 +211,8 @@ export const createProduct = async (
   req: AuthenticatedRequest,
   res: Response
 ) => {
-  const { name, description, price, firstImageURL, secondImageURL } = req.body;
+  const { name, description, price, firstImageURL, secondImageURL, info } =
+    req.body;
   const { tkUser } = req;
   const { subcategoryId } = req.params;
 
@@ -238,6 +239,7 @@ export const createProduct = async (
       price,
       firstImageURL,
       secondImageURL,
+      info,
       subcategory,
     });
 

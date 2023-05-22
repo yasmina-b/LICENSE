@@ -179,6 +179,11 @@ export const deleteOrder = async (req: AuthenticatedRequest, res: Response) => {
       return res.status(404).json(`Order with id ${orderId} does not exist`);
     }
 
+    for (const cartEntry of order.cartEntries) {
+      cartEntry.productVariant = null;
+      await AppDataSource.getRepository(CartEntry).save(cartEntry);
+    }
+
     await AppDataSource.getRepository(CartEntry).remove(order.cartEntries);
     await AppDataSource.getRepository(Order).remove(order);
 
