@@ -81,7 +81,7 @@ export default function WomenProductsTabel() {
       {
         field: "productVariants",
         headerName: "Attributes & Attributes values",
-        width: 250,
+        width: 350,
         align: "center",
         headerAlign: "center",
         renderCell: (params) => {

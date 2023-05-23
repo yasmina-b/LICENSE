@@ -25,7 +25,10 @@ export default function AddVariant() {
   const getProducts = async () => {
     try {
       const response = await axios.get("http://localhost:3001/products");
-      setProducts(response.data);
+      const sortedProducts = response.data.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+      setProducts(sortedProducts);
     } catch (err) {
       console.error(err);
     }
@@ -36,7 +39,10 @@ export default function AddVariant() {
       const response = await axios.get(
         "http://localhost:3001/productAttributeValues"
       );
-      setProductAttributeValues(response.data);
+      const sorted = response.data.sort((a, b) =>
+        a.productAttribute.name.localeCompare(b.productAttribute.name)
+      );
+      setProductAttributeValues(sorted);
     } catch (err) {
       console.error(err);
     }
@@ -50,7 +56,7 @@ export default function AddVariant() {
           `http://localhost:3001/admin/productVariant/${productId}`,
           {
             quantityInStock,
-            productAttributeValueId: selectedAttributeValue
+            productAttributeValueId: selectedAttributeValue,
           },
           {
             headers: {
@@ -149,7 +155,7 @@ export default function AddVariant() {
             {products &&
               products.map((product) => (
                 <MenuItem key={product.id} value={product.id}>
-                  {product.name}
+                  {product.name} - {product.subcategory.category.name}
                 </MenuItem>
               ))}
           </TextField>

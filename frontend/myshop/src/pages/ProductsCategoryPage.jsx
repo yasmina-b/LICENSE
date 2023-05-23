@@ -193,7 +193,7 @@ const ProductsCategoryPage = () => {
 
       <nav className="navbar">
         <div className="navbar-items">
-          <div className="navbar-item">
+          {/* <div className="navbar-item">
             <label htmlFor="sort-order-select" className="price-select-label">
               FILTER BY SIZE:{" "}
             </label>
@@ -213,7 +213,7 @@ const ProductsCategoryPage = () => {
                   </option>
                 ))}
             </select>
-          </div>
+          </div> */}
           <div className="navbar-item">
             <label htmlFor="sort-order-select" className="price-select-label">
               SORT BY PRICE:{" "}
@@ -288,7 +288,7 @@ const ProductsCategoryPage = () => {
                 sortedFilteredProducts.map((product) => (
                   <React.Fragment key={product.id}>
                     <div
-                      onClick={() => navigate(`/productVariants/${product.id}`)}
+                      onClick={() => navigate(`/productVariants/${product.product.id}`)}
                     >
                       <Card item={product.product} />
                     </div>

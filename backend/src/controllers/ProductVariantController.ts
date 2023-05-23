@@ -33,7 +33,11 @@ router.get(
   "/filteredBySizeCategory/:categoryId",
   getProductVariantsOfCategoyByProductAttributeValue
 );
-router.post("/admin/productVariant/:productId", createProductVariant);
+router.post(
+  "/admin/productVariant/:productId",
+  verifyToken,
+  createProductVariant
+);
 router.put(
   "/updateProductVariant/:productVariantId",
   verifyToken,

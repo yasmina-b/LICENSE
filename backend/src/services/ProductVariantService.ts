@@ -77,7 +77,6 @@ export const getProductVariantByProductAttributeValue = async (
       return res.status(404).json({ message: "ProductVariant not found" });
     }
 
-    // Fetch the product of the product variant
     const product = await AppDataSource.getRepository(Product)
       .createQueryBuilder("p")
       .leftJoin("p.productVariants", "pv")
@@ -90,7 +89,6 @@ export const getProductVariantByProductAttributeValue = async (
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // Attach the product to the product variant and return the result
     productVariant.product = product;
     return res.json(productVariant);
   } catch (error) {
@@ -235,11 +233,11 @@ export const createProductVariant = async (
   const { productAttributeValueId } = req.body;
 
   try {
-    // if (!tkUser.isAdmin) {
-    //   return res
-    //     .status(401)
-    //     .json("You are not authorized to create product variants!");
-    // }
+    if (!tkUser.isAdmin) {
+      return res
+        .status(401)
+        .json("You are not authorized to create product variants!");
+    }
     const product = await AppDataSource.getRepository(Product).findOne({
       where: {
         id: productId,
