@@ -165,7 +165,7 @@ const ProductsPage = () => {
               sortedFilteredProducts.map((product) => (
                 <React.Fragment key={product.id}>
                   <div
-                    onClick={() => navigate(`/productVariants/${product.id}`)}
+                    onClick={() => navigate(`/productVariants/${product.product.id}`)}
                   >
                     <Card item={product.product} />
                   </div>
