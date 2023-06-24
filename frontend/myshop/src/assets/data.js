@@ -15,7 +15,7 @@ export const carouselItems = [
   },
   {
     id: 3,
-    img: "https://image-cdn.hypb.st/https%3A%2F%2Fhypebeast.com%2Fimage%2F2016%2F10%2Ftodd-snyder-men-of-new-york-campaign-0.jpg?w=960&cbr=1&q=90&fit=max",
+    img: "https://theimpression.com/wp-content/uploads/2019/11/The-best-mens-campaigns-fall-2019-the-impression-header.jpg",
     title: "RUNAWAY TRENDS",
     desc: "CLASSIC WITH A TOUCH OF ATYPICAL",
     button: "DISCOVER MEN'S FASHION"
