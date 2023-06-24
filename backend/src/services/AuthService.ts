@@ -14,12 +14,13 @@ export const register = async (req: Request, res: Response) => {
 
   let isEmailAvailable: User;
 
-  if (!email) errors.email = "Email can not be empty!";
-  if (!password) errors.password = "Password can not be empty!";
+  if (!email) errors.email = "Email cannot be empty!";
+  if (!password) errors.password = "Password cannot be empty!";
   if (!confirmPassword)
-    errors.confirmPassword = "Confirm paswword can not be empty!";
-  if (!firstName) errors.firstName = "Firstname can not be empty!";
-  if (!lastName) errors.lastName = "Lastname can not be empty!";
+    errors.confirmPassword = "Confirm paswword cannot be empty!";
+  if (!firstName) errors.firstName = "Firstname cannot be empty!";
+  if (!lastName) errors.lastName = "Lastname cannot be empty!";
+  if (!phoneNumber) errors.phoneNumber = "Phone number cannot be empty!";
 
   if (!isEmail(email)) errors.email = "A valid email is required";
 
